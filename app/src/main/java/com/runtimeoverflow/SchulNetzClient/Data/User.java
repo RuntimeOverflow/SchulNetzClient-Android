@@ -28,7 +28,10 @@ public class User {
 		if(!prefs.getAll().containsKey("user")) return new User();
 
 		Gson gson = new GsonBuilder().create();
-		return gson.fromJson(prefs.getString("user", null), User.class);
+		User user = gson.fromJson(prefs.getString("user", null), User.class);
+		
+		user.processConnections();
+		return user;
 	}
 
 	public void save(){
@@ -43,9 +46,12 @@ public class User {
 	}
 	
 	public void processConnections(){
+		for(Teacher t : teachers) t.subjects = new ArrayList<>();
+		
 		for(Subject s : subjects){
 			if(s.identifier.split("-").length == 3){
 				Teacher t = teacherForShortName(s.identifier.split("-")[2]);
+				
 				if(t != null){
 					t.subjects.add(s);
 					s.teacher = t;
@@ -58,9 +64,10 @@ public class User {
 		}
 
 		for(Student s : students){
+			s.self = false;
+			
 			if(s.self){
 				self = s;
-				break;
 			}
 		}
 	}

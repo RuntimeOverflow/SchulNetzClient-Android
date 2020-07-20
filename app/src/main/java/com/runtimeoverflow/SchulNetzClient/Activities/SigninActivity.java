@@ -136,7 +136,7 @@ public class SigninActivity extends AppCompatActivity {
 								    ((TextView)findViewById(R.id.errorLabel)).setText(e.getLocalizedMessage());
 							    } else if(res.getClass() == boolean.class || res.getClass() == Boolean.class){
 								    if(!(Boolean)res){
-									    ((TextView)findViewById(R.id.errorLabel)).setText(getApplicationContext().getResources().getText(R.string.invalidCreds));
+									    ((TextView)findViewById(R.id.errorLabel)).setText(getString(R.string.invalidCreds));
 								    } else {
 									    SharedPreferences prefs = context.getSharedPreferences("com.runtimeoverflow.SchulNetzClient", Context.MODE_PRIVATE);
 										SharedPreferences.Editor editor = prefs.edit();
@@ -146,8 +146,8 @@ public class SigninActivity extends AppCompatActivity {
 									    editor.putString("password", account.password);
 
 									    editor.apply();
-
-										switchToMainActivity();
+										
+										startActivity(new Intent(Variables.get().currentContext, StartActivity.class));
 								    }
 							    }
 						    }
@@ -175,10 +175,5 @@ public class SigninActivity extends AppCompatActivity {
 			signinButton.setEnabled(false);
 			signinButton.setAlpha(0.5f);
 		}
-	}
-
-	private void switchToMainActivity(){
-		Intent i = new Intent(this, MainActivity.class);
-		startActivity(i);
 	}
 }

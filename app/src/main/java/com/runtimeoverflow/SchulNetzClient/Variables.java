@@ -11,7 +11,9 @@ public class Variables {
 
     public Account account;
     public User user;
-
+    
+    public Object activityParameter = null;
+    
     private Variables(){
 
     }

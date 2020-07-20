@@ -12,6 +12,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -35,8 +36,10 @@ public class Parser {
 				Subject s = user.subjectForIdentifier(mainRow.children().get(0).children().get(0).ownText().trim());
 				s.name = mainRow.children().get(0).ownText().trim();
 				s.confirmed = mainRow.children().get(4).children().size() <= 0 || !mainRow.children().get(4).children().get(0).hasAttr("href");
-
-				if(gradesRow.children().size() <= 0) return false;
+				
+				ArrayList<Grade> grades = new ArrayList<>();
+				
+				if(gradesRow.children().size() <= 0) continue;
 				if(gradesRow.children().get(0).children().size() > 0 && gradesRow.children().get(0).children().get(0).children().size() > 0){
 					Element gradesTable = gradesRow.children().get(0).children().get(0).children().get(0);
 					if(gradesTable.children().size() <= 0) continue;
@@ -69,9 +72,11 @@ public class Parser {
 							g.weight = Double.parseDouble(gradeRow.children().get(3).ownText().trim());
 						}
 
-						s.grades.add(g);
+						grades.add(g);
 					}
 				}
+				
+				s.grades = grades;
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -82,6 +87,9 @@ public class Parser {
 	}
 
 	public static boolean parseSubjects(Document doc, User user){
+		ArrayList<Subject> previous = user.subjects;
+		user.subjects = new ArrayList<>();
+		
 		try{
 			Element list = doc.getElementById("clsList");
 			if(list == null) return false;
@@ -90,10 +98,15 @@ public class Parser {
 				Subject s = new Subject();
 				if(subject.getElementsByClass("mdl-radio__label").size() <= 0) return false;
 				s.identifier = subject.getElementsByClass("mdl-radio__label").get(0).ownText().trim();
+				
+				String[] parts = s.identifier.split("-");
+				if(parts.length >= 3) s.shortName = parts[0];
+				
 				user.subjects.add(s);
 			}
 		} catch(Exception e){
 			e.printStackTrace();
+			user.subjects = previous;
 			return false;
 		}
 
@@ -101,6 +114,9 @@ public class Parser {
 	}
 
 	public static boolean parseStudents(Document doc, User user){
+		ArrayList<Student> previous = user.students;
+		user.students = new ArrayList<>();
+		
 		try{
 			Element table = doc.getElementById("cls-table-Kursliste");
 			if(table == null || table.children().size() < 2) return false;
@@ -137,6 +153,7 @@ public class Parser {
 			}
 		} catch(Exception e){
 			e.printStackTrace();
+			user.students = previous;
 			return false;
 		}
 
@@ -144,6 +161,9 @@ public class Parser {
 	}
 
 	public static boolean parseTeachers(Document doc, User user){
+		ArrayList<Teacher> previous = user.teachers;
+		user.teachers = new ArrayList<>();
+		
 		try{
 			Element table = doc.getElementById("cls-table-Lehrerliste");
 			if(table == null || table.children().size() < 2) return false;
@@ -160,12 +180,13 @@ public class Parser {
 				t.lastName = row.children().get(1).ownText().trim();
 				t.firstName = row.children().get(2).ownText().trim();
 				t.shortName = row.children().get(3).ownText().trim();
-				t.mail = row.children().get(1).getElementsByTag("a").size() > 0 ? row.children().get(1).getElementsByTag("a").get(0).ownText().trim() : "";
+				t.mail = row.children().get(4).getElementsByTag("a").size() > 0 ? row.children().get(4).getElementsByTag("a").get(0).ownText().trim() : "";
 
 				user.teachers.add(t);
 			}
 		} catch(Exception e){
 			e.printStackTrace();
+			user.teachers = previous;
 			return false;
 		}
 
@@ -199,6 +220,9 @@ public class Parser {
 	}
 
 	public static boolean parseTransactions(Document doc, User user){
+		ArrayList<Transaction> previous = user.transactions;
+		user.transactions = new ArrayList<>();
+		
 		try{
 			Element card = doc.getElementById("content-card");
 			if(card.getElementsByTag("table").size() < 2 || card.getElementsByTag("table").get(1).children().size() <= 0) return false;
@@ -234,6 +258,7 @@ public class Parser {
 			user.balanceConfirmed = card.getElementsByTag("p").get(0).getElementsByTag("a").size() <= 0;
 		} catch(Exception e){
 			e.printStackTrace();
+			user.transactions = previous;
 			return false;
 		}
 

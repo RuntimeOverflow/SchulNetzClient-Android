@@ -60,7 +60,6 @@ public class SettingsFragment extends Fragment {
 					
 					//Variables.get().account.signIn();
 					Document doc = (Document)Variables.get().account.loadPage("22352");
-					Log.i("NESA", Boolean.toString(Parser.isSignedIn(doc)));
 					Parser.parseTeachers(doc, Variables.get().user);
 					doc = (Document)Variables.get().account.loadPage("22326");
 					Parser.parseSubjects(doc, Variables.get().user);

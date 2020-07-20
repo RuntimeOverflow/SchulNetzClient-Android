@@ -32,23 +32,11 @@ public class MainActivity extends AppCompatActivity {
 		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 		//NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 		NavigationUI.setupWithNavController(navView, navController);
-		
-		SharedPreferences prefs = getSharedPreferences("com.runtimeoverflow.SchulNetzClient", Context.MODE_PRIVATE);
-		Variables.get().account = new Account(prefs.getString("host", null), prefs.getString("username", null), prefs.getString("password", null));
-		Variables.get().user = User.load();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		Thread t = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				Log.i("NESA", Variables.get().account.signIn().toString());
-			}
-		});
-		t.start();
 		
 		Variables.get().currentContext = this;
 	}
