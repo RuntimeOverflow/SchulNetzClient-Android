@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/grades_navigation"
+        android:title="@string/grades" />
+
+    <item
+        android:id="@+id/absences_navigation"
+        android:title="@string/absences" />
+
+    <item
+        android:id="@+id/timetable_navigation"
+        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:title="@string/timetable" />
+    <item
+        android:id="@+id/people_navigation"
+        android:title="@string/people" />
+    <item
+        android:id="@+id/settings_navigation"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="@string/settings" />
+
+</menu>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@+id/grades_navigation">
+
+    <fragment
+        android:id="@+id/grades_navigation"
+        android:name="com.runtimeoverflow.SchulNetzClient.Activities.GradesFragment"
+        android:label="@string/grades"
+        tools:layout="@layout/grades_fragment" />
+
+    <fragment
+        android:id="@+id/absences_navigation"
+        android:name="com.runtimeoverflow.SchulNetzClient.Activities.AbsencesFragment"
+        android:label="@string/absences"
+        tools:layout="@layout/absences_fragment" />
+
+    <fragment
+        android:id="@+id/timetable_navigation"
+        android:name="com.runtimeoverflow.SchulNetzClient.Activities.TimetableFragment"
+        android:label="@string/timetable"
+        tools:layout="@layout/timetable_fragment" />
+    <fragment
+        android:id="@+id/people_navigation"
+        android:name="com.runtimeoverflow.SchulNetzClient.Activities.PeopleFragment"
+        android:label="@string/people"
+        tools:layout="@layout/people_fragment" />
+    <fragment
+        android:id="@+id/settings_navigation"
+        android:name="com.runtimeoverflow.SchulNetzClient.Activities.SettingsFragment"
+        android:label="@string/settings"
+        tools:layout="@layout/settings_fragment" />
+</navigation>
