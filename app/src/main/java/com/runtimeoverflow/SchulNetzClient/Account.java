@@ -1,5 +1,6 @@
 package com.runtimeoverflow.SchulNetzClient;
 
+import android.app.Application;
 import android.content.res.Resources;
 import android.util.Log;
 import android.widget.Toast;
@@ -9,6 +10,7 @@ import androidx.annotation.Nullable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 import java.io.BufferedReader;
@@ -19,7 +21,9 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -31,22 +35,38 @@ public class Account {
 	public String host;
 	public String username;
 	public String password;
-
+	
+	public boolean signedIn = false;
+	
     private String id = "";
     private String currentTransId = "";
     private ArrayList<String> cookiesList = new ArrayList<>();
     private String currentCookies = "";
 
-    private SessionManager manager = new SessionManager(this);
-
-    public Account(String host, String username, String password){
+    private SessionManager manager;
+	
+	public Account(String host, String username, String password){
+		this(host, username, password, true);
+	}
+    
+    public Account(String host, String username, String password, boolean session){
         this.host = host;
         this.username = username;
         this.password = password;
+        
+        if(session){
+			manager = new SessionManager(this);
+			((Application)Variables.get().currentContext.getApplicationContext()).registerActivityLifecycleCallbacks(manager);
+		}
     }
-
-	public Object signIn(){
+    
+    private boolean signingIn = false;
+    public Object signIn(){
+		if(signingIn) return true;
+		
 		try {
+			signingIn = true;
+			
 			HttpsURLConnection con = (HttpsURLConnection) new URL("https://" + host + "/").openConnection();
 			con.setRequestProperty("User-Agent", "SchulNetz Client");
 			InputStream in = con.getInputStream();
@@ -63,6 +83,8 @@ public class Account {
 						return (String)Resources.getSystem().getText(android.R.string.httpErrorBadUrl);
 					}
 				};
+				
+				signingIn = false;
 				return e;
 			}
 			String loginHash = es.get(0).attr("value");
@@ -85,27 +107,46 @@ public class Account {
 			in = con.getInputStream();
 			doc = Jsoup.parse(in, "UTF-8", "/");
 			Element navBar = doc.getElementById("nav-main-menu");
-			if(navBar == null) return false;
-			else if(navBar.childNodeSize() <= 0 || !navBar.child(0).hasAttr("href")) return null;
+			if(navBar == null) {
+				signingIn = false;
+				return false;
+			} else if(navBar.childNodeSize() <= 0 || !navBar.child(0).hasAttr("href")) {
+				signingIn = false;
+				return null;
+			}
+			
 			String href = navBar.child(0).attr("href");
-			if(!href.contains("&id=") || !href.contains("&transid=")) return null;
+			if(!href.contains("&id=") || !href.contains("&transid=")) {
+				signingIn = false;
+				return null;
+			}
+			
 			id = href.substring(href.indexOf("&id=") + "&id=".length(), href.lastIndexOf("&transid="));
 			currentTransId = getTransId(doc);
 			currentCookies = getCookies(con.getHeaderFields());
 			con.disconnect();
-
-			manager.start();
+			
+			if(manager != null) manager.start();
+			signedIn = true;
+			
+			signingIn = false;
 			return true;
 		} catch(Exception e){
 			e.printStackTrace();
+			signingIn = false;
 			return e;
 		}
 	}
-
+	
+	private boolean signingOut = false;
 	public Object signOut(){
+		if(signingOut) return true;
+		
     	try {
     		if(id.length() <= 0 || currentTransId.length() <= 0 || currentCookies.length() <= 0) return true;
-
+			
+    		signingOut = true;
+    		
 			HttpsURLConnection con = (HttpsURLConnection) new URL("https://" + host + "/index.php?pageid=9999&id=" + id + "&transid=" + currentTransId).openConnection();
 			con.setRequestMethod("GET");
 			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -118,10 +159,14 @@ public class Account {
 			id = currentTransId = currentCookies = "";
 			cookiesList = new ArrayList<>();
 
-			manager.stop();
+			if(manager != null) manager.stop();
+			signedIn = false;
+			
+			signingOut = false;
 			return true;
 		} catch(Exception e){
     		e.printStackTrace();
+			signingOut = false;
     		return e;
 		}
 	}
@@ -154,8 +199,30 @@ public class Account {
 			return e;
 		}
 	}
-
+	
+	private ArrayList<String> queue = new ArrayList<>();
 	public Object loadPage(String pageId){
+		if((!signedIn && !signingIn) || signingOut) return null;
+		
+		if(queue.contains(pageId)) return false;
+		
+		queue.add(pageId);
+		while(!queue.get(0).equals(pageId)) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		while(signingIn) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		try {
 			HttpsURLConnection con = (HttpsURLConnection) new URL("https://" + host + "/index.php?pageid=" + pageId + "&id=" + id + "&transid=" + currentTransId).openConnection();
 			con.setRequestMethod("GET");
@@ -172,6 +239,48 @@ public class Account {
 			
 			con.disconnect();
 			
+			queue.remove(0);
+			return src;
+		} catch (IOException e) {
+			e.printStackTrace();
+			queue.remove(0);
+			return e;
+		}
+	}
+	
+	public Object loadSchedule(Calendar from, Calendar to){
+		return  loadSchedule(from, to, "day");
+	}
+	
+	public Object loadSchedule(Calendar from, Calendar to, String view){
+		if((!signedIn && !signingIn) || signingOut) return null;
+		
+		while(signingIn) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			
+			Calendar to2 = Calendar.getInstance();
+			to2.setTimeInMillis(to.getTimeInMillis());
+			to2.add(Calendar.DAY_OF_YEAR, 1);
+			
+			HttpsURLConnection con = (HttpsURLConnection) new URL("https://" + host + "/scheduler_processor.php?view=" + view + "&curr_date=2005-05-10&min_date=" + sdf.format(from.getTime()) + "&max_date=" + sdf.format(to2.getTime()) + "&ansicht=schueleransicht&id=" + id + "&transid=potato&pageid=22202").openConnection();
+			con.setRequestMethod("GET");
+			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			con.setRequestProperty("Connection", "keep-alive");
+			con.setRequestProperty("Cookie", currentCookies);
+			con.setRequestProperty("User-Agent", "SchulNetz Client");
+			
+			InputStream in = con.getInputStream();
+			Document src = Jsoup.parse(in, "UTF-8", "/", Parser.xmlParser());
+			
+			con.disconnect();
 			return src;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -210,5 +319,15 @@ public class Account {
 		}
 
 		return cookies;
+	}
+	
+	public void close(){
+		if(manager != null) {
+			((Application)Variables.get().currentContext.getApplicationContext()).unregisterActivityLifecycleCallbacks(manager);
+			manager.stop();
+			manager = null;
+		}
+		
+		if(signedIn) signOut();
 	}
 }

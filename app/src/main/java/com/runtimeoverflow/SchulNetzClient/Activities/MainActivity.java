@@ -32,12 +32,24 @@ public class MainActivity extends AppCompatActivity {
 		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 		//NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 		NavigationUI.setupWithNavController(navView, navController);
+		
+		SharedPreferences prefs = this.getSharedPreferences("com.runtimeoverflow.SchulNetzClient", Context.MODE_PRIVATE);
+		int pageId = prefs.getInt("defaultPage", R.id.grades_navigation);
+		navView.setSelectedItemId(pageId);
 	}
-
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+	}
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		
 		Variables.get().currentContext = this;
 	}
+	
+	@Override
+	public void onBackPressed() {}
 }

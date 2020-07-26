@@ -16,6 +16,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -27,9 +28,18 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.runtimeoverflow.SchulNetzClient.Account;
+import com.runtimeoverflow.SchulNetzClient.AsyncAction;
+import com.runtimeoverflow.SchulNetzClient.Data.Lesson;
 import com.runtimeoverflow.SchulNetzClient.Data.User;
+import com.runtimeoverflow.SchulNetzClient.Parser;
 import com.runtimeoverflow.SchulNetzClient.R;
+import com.runtimeoverflow.SchulNetzClient.Utilities;
 import com.runtimeoverflow.SchulNetzClient.Variables;
+
+import org.jsoup.nodes.Document;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 
 public class SigninActivity extends AppCompatActivity {
 	private Spinner hostList;
@@ -50,7 +60,7 @@ public class SigninActivity extends AppCompatActivity {
 		setContentView(R.layout.signin_activity);
 
 		hostList = findViewById(R.id.hostList);
-		String[] hosts = new String[]{(String)getApplicationContext().getResources().getText(R.string.selectHost), "ksw.nesa-sg.ch", "Other..."};
+		String[] hosts = new String[]{(String)getApplicationContext().getResources().getText(R.string.selectHost), "ksw.nesa-sg.ch", getString(R.string.other)};
 		SpinnerAdapter sa = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, hosts){
 			@Override
 			public boolean isEnabled(int position) {
@@ -113,17 +123,24 @@ public class SigninActivity extends AppCompatActivity {
 				((TextView)findViewById(R.id.errorLabel)).setText("");
 				signinButton.setVisibility(View.INVISIBLE);
 				findViewById(R.id.loadingIcon).setVisibility(View.VISIBLE);
-
+				
+				if(!Utilities.hasWifi()){
+					((TextView)findViewById(R.id.errorLabel)).setText(getString(R.string.noConnection));
+					
+					signinButton.setVisibility(View.VISIBLE);
+					findViewById(R.id.loadingIcon).setVisibility(View.INVISIBLE);
+					
+					return;
+				}
+				
 			    final Thread t = new Thread(new Runnable() {
 				    @Override
 				    public void run() {
 				    	String host = (String)hostList.getSelectedItem();
 				    	if(hostList.getSelectedItemPosition() == hostList.getCount() - 1) host = hostField.getText().toString();
-					    final Account account = new Account(host, usernameField.getText().toString(), passwordField.getText().toString());
+					    final Account account = new Account(host, usernameField.getText().toString(), passwordField.getText().toString(), false);
 					    final Object res = account.signIn();
-
-					    if((res.getClass() == boolean.class || res.getClass() == Boolean.class) && (Boolean)res) account.signOut();
-
+					    
 					    Handler mainHandler = new Handler(Looper.getMainLooper());
 					    Runnable r = new Runnable() {
 						    @Override
@@ -144,10 +161,45 @@ public class SigninActivity extends AppCompatActivity {
 										editor.putString("host", account.host);
 									    editor.putString("username", account.username);
 									    editor.putString("password", account.password);
-
 									    editor.apply();
-										
-										startActivity(new Intent(Variables.get().currentContext, StartActivity.class));
+									
+										((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+									    
+									    findViewById(R.id.contentLayout).setVisibility(View.GONE);
+									    findViewById(R.id.accountLoadingIcon).setVisibility(View.VISIBLE);
+									    
+										Utilities.runAsynchronous(new AsyncAction() {
+											@Override
+											public void runAsync() {
+												Variables.get().user = new User();
+												
+												Object doc = account.loadPage("22352");
+												if(doc.getClass() == Document.class) Parser.parseTeachers((Document)doc, Variables.get().user);
+												doc = account.loadPage("22326");
+												if(doc.getClass() == Document.class) Parser.parseSubjects((Document)doc, Variables.get().user);
+												if(doc.getClass() == Document.class) Parser.parseStudents((Document)doc, Variables.get().user);
+												doc = account.loadPage("21311");
+												if(doc.getClass() == Document.class) Parser.parseGrades((Document)doc, Variables.get().user);
+												doc = account.loadPage("21411");
+												if(doc.getClass() == Document.class) Parser.parseSelf((Document)doc, Variables.get().user);
+												if(doc.getClass() == Document.class) Parser.parseTransactions((Document)doc, Variables.get().user);
+												doc = account.loadPage("21111");
+												if(doc.getClass() == Document.class) Parser.parseAbsences((Document)doc, Variables.get().user);
+												doc = Variables.get().account.loadPage("22202");
+												if(doc.getClass() == Document.class) Parser.parseSchedulePage((Document)doc, Variables.get().user);
+												
+												doc = Variables.get().account.loadSchedule(Calendar.getInstance(), Calendar.getInstance());
+												if(doc.getClass() == Document.class) Variables.get().user.lessons = Parser.parseSchedule((Document)doc);
+												
+												Variables.get().user.processConnections();
+												Variables.get().user.save();
+											}
+											
+											@Override
+											public void runSyncWhenDone() {
+												startActivity(new Intent(Variables.get().currentContext, StartActivity.class));
+											}
+										});
 								    }
 							    }
 						    }

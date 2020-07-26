@@ -26,10 +26,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.runtimeoverflow.SchulNetzClient.AsyncAction;
 import com.runtimeoverflow.SchulNetzClient.Data.Student;
 import com.runtimeoverflow.SchulNetzClient.Data.Teacher;
+import com.runtimeoverflow.SchulNetzClient.Parser;
 import com.runtimeoverflow.SchulNetzClient.R;
+import com.runtimeoverflow.SchulNetzClient.Utilities;
 import com.runtimeoverflow.SchulNetzClient.Variables;
+
+import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,7 +104,37 @@ public class PeopleFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		
-		reloadList();
+		Utilities.runAsynchronous(new AsyncAction() {
+			@Override
+			public void runAsync() {
+				if(Utilities.hasWifi()){
+					Object result = Variables.get().account.loadPage("22352");
+					
+					if(result.getClass() == Document.class){
+						Parser.parseTeachers((Document) result, Variables.get().user);
+					}
+					
+					result = Variables.get().account.loadPage("22326");
+					
+					if(result.getClass() == Document.class){
+						Parser.parseSubjects((Document) result, Variables.get().user);
+						Parser.parseStudents((Document) result, Variables.get().user);
+					}
+					
+					result = Variables.get().account.loadPage("21311");
+					
+					if(result.getClass() == Document.class){
+						Parser.parseGrades((Document) result, Variables.get().user);
+						Variables.get().user.processConnections();
+					}
+				}
+			}
+			
+			@Override
+			public void runSyncWhenDone() {
+				reloadList();
+			}
+		});
 	}
 	
 	private void showStudents(){
@@ -117,6 +152,8 @@ public class PeopleFragment extends Fragment {
 	}
 	
 	private void reloadList(){
+		if(getView() == null) return;
+		
 		if(!studentsButton.isEnabled()){
 			ArrayList<String> names = new ArrayList<>();
 			
@@ -125,7 +162,7 @@ public class PeopleFragment extends Fragment {
 			}
 			
 			adapter.setNames(names);
-		} else {
+		} else{
 			ArrayList<String> names = new ArrayList<>();
 			
 			for(Teacher t : Variables.get().user.teachers){

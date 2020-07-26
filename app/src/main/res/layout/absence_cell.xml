@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+	
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+		
+		<Button
+			android:id="@+id/absenceButton"
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:ellipsize="end"
+			android:maxLines="1"
+			android:textAlignment="textStart"
+			android:textAllCaps="false"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/lessonCountLabel"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+		
+		<TextView
+			android:id="@+id/lessonCountLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="10dp"
+			android:textAlignment="textEnd"
+			android:textColor="#000000"
+			android:textSize="18sp"
+			app:layout_constraintBottom_toBottomOf="@+id/absenceButton"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="@+id/absenceButton" />
+	</androidx.constraintlayout.widget.ConstraintLayout>
+	
+	<TextView
+		android:id="@+id/timespanLabel"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="15dp"
+		android:layout_marginBottom="5dp"
+		android:textSize="18sp"
+		android:visibility="gone" />
+	
+	<Button
+		android:id="@+id/reportsButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:text="@string/showReports"
+		android:textAlignment="textStart"
+		android:textAllCaps="false"
+		android:visibility="gone" />
+	
+	<LinearLayout
+		android:id="@+id/reportsList"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		android:visibility="gone"/>
+</LinearLayout>

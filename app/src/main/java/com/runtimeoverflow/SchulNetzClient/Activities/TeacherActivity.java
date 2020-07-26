@@ -3,6 +3,9 @@ package com.runtimeoverflow.SchulNetzClient.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -67,6 +70,24 @@ public class TeacherActivity extends AppCompatActivity {
                 else Toast.makeText(Variables.get().currentContext, getString(R.string.noMail), Toast.LENGTH_LONG).show();
             }
         });
+    
+        View.OnLongClickListener copyListener = new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if(Button.class.isAssignableFrom(view.getClass())){
+                    Toast.makeText(Variables.get().currentContext, "Copied!", Toast.LENGTH_SHORT).show();
+                
+                    ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("text", ((Button)view).getText());
+                    clipboard.setPrimaryClip(clip);
+                }
+            
+                return true;
+            }
+        };
+    
+        mailButton.setOnLongClickListener(copyListener);
+        subjectsButton.setOnLongClickListener(copyListener);
     }
     
     @Override

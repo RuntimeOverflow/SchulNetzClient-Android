@@ -1,14 +1,21 @@
 <resources>
-	<string name="app_name">SchulNetz</string>
+	<string name="app_name" translatable="false">SchulNetz</string>
 	
 	<string name="username">Username</string>
 	<string name="password">Password</string>
 	<string name="signin">Sign in</string>
 	<string name="signout">Sign out</string>
+	<string name="signoutConfirmation">Are you sure?</string>
 	<string name="invalidCreds">Invalid username/password</string>
 	<string name="invalidHost">Invalid host</string>
 	<string name="selectHost">Select host</string>
 	<string name="host">Host</string>
+	<string name="noConnection">No internet connection</string>
+	<string name="noDesc">No description provided</string>
+	
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="other">Other...</string>
 	
 	<string name="noMaps">No supported Maps app installed</string>
 	<string name="noPhone">No supported phone app installed</string>
@@ -21,6 +28,7 @@
 	<string name="people">People</string>
 	<string name="settings">Settings</string>
 	<string name="subjects">Subjects</string>
+	<string name="transactions">Transactions</string>
 	
 	<string name="students">Students</string>
 	<string name="teachers">Teachers</string>
@@ -30,7 +38,36 @@
 	<string name="phone">Phone</string>
 	<string name="birthdate">Date of Birth</string>
 	<string name="birthday">Birthday</string>
-	<string name="mail">Mail</string>
+	<string name="mail" translatable="false">Mail</string>
+	<string name="bilingual">Bilingual</string>
+	<string name="age">Years old</string>
+	<string name="noPhoneNumber">No phone number provided</string>
 	
-	<string name="rightArrowDesc"><![CDATA[>]]></string>
+	<string name="noGrades">No Grades yet</string>
+	<string name="showReports">Show reported lessons</string>
+	<string name="hideReports">Hide reported lessons</string>
+	<string name="lesson">Lesson</string>
+	<string name="lessons">Lessons</string>
+	<string name="noLessons">No Lessons</string>
+	<string name="noAbsences">No Absences</string>
+	<string name="missedLessons">Lessons missed</string>
+	
+	<string name="accountBalance">Account balance</string>
+	<string name="balance">Balance</string>
+	
+	<string name="newGrade">New grade published</string>
+	<string name="modifiedGrade">Grade modified</string>
+	<string name="newAbsence">Absence added</string>
+	<string name="newExcusedAbsence">Excused absence added</string>
+	<string name="excusedAbsence">Absence excused</string>
+	<string name="newTransaction">Account balance changed</string>
+	
+	<string name="rightArrowDesc" translatable="false"><![CDATA[>]]></string>
+	<string name="leftArrowDesc" translatable="false"><![CDATA[<]]></string>
+	<string name="avatarDesc" translatable="false"><![CDATA[]]></string>
+	
+	<string name="defaultPage">Start Page</string>
+	<string name="notifications">Notifications</string>
+	<string name="source" translatable="false">Source Code [Github]</string>
+	<string name="credits" translatable="false">Created by\nRuntimeOverflow</string>
 </resources>
