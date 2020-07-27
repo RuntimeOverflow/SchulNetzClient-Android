@@ -158,7 +158,7 @@ public class Account {
 
 			id = currentTransId = currentCookies = "";
 			cookiesList = new ArrayList<>();
-
+			
 			if(manager != null) manager.stop();
 			signedIn = false;
 			
@@ -172,6 +172,8 @@ public class Account {
 	}
 
 	public Object resetTimeout(){
+		if(!signedIn) return null;
+		
 		try{
 			HttpsURLConnection con = (HttpsURLConnection)new URL("https://" + host + "/xajax_js.php?pageid=1&id=" + id + "&transid=" + currentTransId).openConnection();
 			con.setDoOutput(true);
@@ -221,6 +223,11 @@ public class Account {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		}
+		
+		if(!signedIn || signingOut) {
+			queue.remove(0);
+			return null;
 		}
 		
 		try {

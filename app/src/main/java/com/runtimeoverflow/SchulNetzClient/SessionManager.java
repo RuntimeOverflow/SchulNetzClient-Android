@@ -29,6 +29,10 @@ public class SessionManager implements Runnable, Application.ActivityLifecycleCa
 
 	@Override
 	public void run() {
+		if(running) return;
+		
+		running = true;
+		
 		while(running){
 			account.resetTimeout();
 

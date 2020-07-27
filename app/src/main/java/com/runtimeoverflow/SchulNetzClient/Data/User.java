@@ -74,6 +74,7 @@ public class User {
 			for(Student s : students){
 				if(s.self){
 					self = s;
+					break;
 				}
 			}
 			
@@ -112,32 +113,26 @@ public class User {
 	}
 
 	public Teacher teacherForShortName(String shortName){
-		for(Teacher t : teachers){
-			if(Objects.equals(t.shortName.toLowerCase(), shortName.toLowerCase())) return t;
-		}
+		for(Teacher t : teachers) if(Objects.equals(t.shortName.toLowerCase(), shortName.toLowerCase())) return t;
 
 		return null;
 	}
 
 	public Subject subjectForShortName(String shortName){
-		for(Subject s : subjects){
-			if(Objects.equals(s.shortName.toLowerCase(), shortName.toLowerCase())) return s;
-		}
+		for(Subject s : subjects) if(Objects.equals(s.shortName.toLowerCase(), shortName.toLowerCase())) return s;
 
 		return null;
 	}
 
 	public Subject subjectForIdentifier(String identifier){
-		for(Subject s : subjects){
-			if(Objects.equals(s.identifier.toLowerCase(), identifier.toLowerCase())) return s;
-		}
+		for(Subject s : subjects) if(Objects.equals(s.identifier.toLowerCase(), identifier.toLowerCase())) return s;
 
 		return null;
 	}
 	
 	public void processLessons(ArrayList<Lesson> lessons){
 		for(Lesson l : lessons){
-			if(l.lessonIdentifier.split("-").length >= 3){
+			if(l.lessonIdentifier != null && l.lessonIdentifier.split("-").length >= 3){
 				Subject s = subjectForShortName(l.lessonIdentifier.split("-")[0]);
 				if(s != null){
 					l.subject = s;
@@ -149,7 +144,7 @@ public class User {
 				}
 			}
 			
-			l.room = roomMap.get(l.roomNumber);
+			if(roomMap.containsKey(l.roomNumber)) l.room = roomMap.get(l.roomNumber);
 		}
 	}
 }
