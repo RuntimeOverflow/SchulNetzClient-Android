@@ -53,55 +53,61 @@ public class User {
 	}
 	
 	public void processConnections(){
-		for(Teacher t : teachers) t.subjects = new ArrayList<>();
-		
-		for(Subject s : subjects){
-			if(s.identifier.split("-").length == 3){
-				Teacher t = teacherForShortName(s.identifier.split("-")[2]);
-				
-				if(t != null){
-					t.subjects.add(s);
-					s.teacher = t;
-				}
-			}
-
-			for(Grade g : s.grades){
-				g.subject = s;
-			}
-		}
-
-		for(Student s : students){
-			if(s.self){
-				self = s;
-			}
-		}
-		
-		for(Absence a : absences){
-			a.subjects = new ArrayList<>();
+		try{
+			for(Teacher t : teachers) t.subjects = new ArrayList<>();
 			
-			for(String subjectIdentifier : a.subjectIdentifiers){
-				Subject s = subjectForShortName(subjectIdentifier.split("-")[0]);
-				
-				if(s != null) a.subjects.add(s);
-			}
-		}
-		
-		for(Lesson l : lessons){
-			if(l.lessonIdentifier.split("-").length >= 3){
-				Subject s = subjectForShortName(l.lessonIdentifier.split("-")[0]);
-				if(s != null){
-					//s.lessons.add(l);
-					l.subject = s;
+			for(Subject s : subjects){
+				if(s.identifier != null && s.identifier.split("-").length == 3){
+					Teacher t = teacherForShortName(s.identifier.split("-")[2]);
+					
+					if(t != null){
+						t.subjects.add(s);
+						s.teacher = t;
+					}
 				}
 				
-				Teacher t = teacherForShortName(l.lessonIdentifier.split("-")[2]);
-				if(t != null){
-					//t.lessons.add(l);
-					l.teacher = t;
+				for(Grade g : s.grades){
+					g.subject = s;
 				}
 			}
 			
-			l.room = roomMap.get(l.roomNumber);
+			for(Student s : students){
+				if(s.self){
+					self = s;
+				}
+			}
+			
+			for(Absence a : absences){
+				a.subjects = new ArrayList<>();
+				
+				for(String subjectIdentifier : a.subjectIdentifiers){
+					if(subjectIdentifier == null) continue;
+					
+					Subject s = subjectForShortName(subjectIdentifier.split("-")[0]);
+					
+					if(s != null) a.subjects.add(s);
+				}
+			}
+			
+			for(Lesson l : lessons){
+				if(l.lessonIdentifier != null && l.lessonIdentifier.split("-").length >= 3){
+					Subject s = subjectForShortName(l.lessonIdentifier.split("-")[0]);
+					if(s != null){
+						//s.lessons.add(l);
+						l.subject = s;
+					}
+					
+					Teacher t = teacherForShortName(l.lessonIdentifier.split("-")[2]);
+					if(t != null){
+						//t.lessons.add(l);
+						l.teacher = t;
+					}
+				}
+				
+				if(roomMap.containsKey(l.roomNumber)) l.room = roomMap.get(l.roomNumber);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 
