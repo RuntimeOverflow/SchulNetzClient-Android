@@ -18,31 +18,31 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class TimeTableView extends View {
+public class TimetableView extends View {
 	private ArrayList<Lesson.ScheduleLesson> lessons = new ArrayList<>();
 	private Paint fill;
 	private Paint stroke;
 	private Paint text;
 	
-	public TimeTableView(Context context) {
+	public TimetableView(Context context) {
 		super(context);
 		
 		init();
 	}
 	
-	public TimeTableView(Context context, @Nullable AttributeSet attrs) {
+	public TimetableView(Context context, @Nullable AttributeSet attrs) {
 		super(context, attrs);
 		
 		init();
 	}
 	
-	public TimeTableView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+	public TimetableView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		
 		init();
 	}
 	
-	public TimeTableView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+	public TimetableView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 		super(context, attrs, defStyleAttr, defStyleRes);
 		
 		init();
@@ -124,7 +124,11 @@ public class TimeTableView extends View {
 				if(width < stringBounds.width() + getResources().getDisplayMetrics().density * 24 + timeBounds.width()) title = l.lesson.subject.shortName + " [" + l.lesson.room + "]";
 				text.getTextBounds(title, 0, title.length(), stringBounds);
 				if(width < stringBounds.width() + getResources().getDisplayMetrics().density * 24 + timeBounds.width()) title = l.lesson.subject.shortName;
-			} else title = l.lesson.lessionIdentifier;
+			} else {
+				title = l.lesson.lessonIdentifier  + " [" + l.lesson.room + "]";
+				text.getTextBounds(title, 0, title.length(), stringBounds);
+				if(width < stringBounds.width() + getResources().getDisplayMetrics().density * 24 + timeBounds.width()) title = l.lesson.lessonIdentifier;
+			}
 			
 			text.getTextBounds(title, 0, title.length(), stringBounds);
 			

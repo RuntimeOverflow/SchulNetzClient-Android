@@ -15,7 +15,7 @@ public class Lesson {
 	
 	public Calendar startDate;
 	public Calendar endDate;
-	public String lessionIdentifier;
+	public String lessonIdentifier;
 	public int roomNumber;
 	public int color;
 	public String type;

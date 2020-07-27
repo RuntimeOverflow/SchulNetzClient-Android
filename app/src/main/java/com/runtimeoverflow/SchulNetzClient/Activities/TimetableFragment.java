@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import com.runtimeoverflow.SchulNetzClient.AsyncAction;
 import com.runtimeoverflow.SchulNetzClient.Data.Lesson;
 import com.runtimeoverflow.SchulNetzClient.Parser;
 import com.runtimeoverflow.SchulNetzClient.R;
-import com.runtimeoverflow.SchulNetzClient.TimeTableView;
+import com.runtimeoverflow.SchulNetzClient.TimetableView;
 import com.runtimeoverflow.SchulNetzClient.Utilities;
 import com.runtimeoverflow.SchulNetzClient.Variables;
 
@@ -27,8 +26,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class TimetableFragment extends Fragment {
-	private TimeTableView tt;
-	private Calendar date = Calendar.getInstance();
+	private TimetableView tt;
 	private ArrayList<Lesson> lessons = new ArrayList<>();
 	
 	@Override
@@ -47,10 +45,10 @@ public class TimetableFragment extends Fragment {
 			@Override
 			public void onClick(View view) {
 				if(Utilities.hasWifi()){
-					date = Calendar.getInstance();
+					Variables.get().timetableDate = Calendar.getInstance();
 					
 					SimpleDateFormat sdf = new SimpleDateFormat("d.M.yyyy");
-					((TextView)getView().findViewById(R.id.dateLabel)).setText(sdf.format(date.getTime()));
+					((TextView)getView().findViewById(R.id.dateLabel)).setText(sdf.format(Variables.get().timetableDate.getTime()));
 					
 					fetchAndReloadSchedule();
 				} else {
@@ -63,10 +61,10 @@ public class TimetableFragment extends Fragment {
 			@Override
 			public void onClick(View view) {
 				if(Utilities.hasWifi()){
-					date.add(Calendar.DAY_OF_YEAR, -1);
+					Variables.get().timetableDate.add(Calendar.DAY_OF_YEAR, -1);
 					
 					SimpleDateFormat sdf = new SimpleDateFormat("d.M.yyyy");
-					((TextView)getView().findViewById(R.id.dateLabel)).setText(sdf.format(date.getTime()));
+					((TextView)getView().findViewById(R.id.dateLabel)).setText(sdf.format(Variables.get().timetableDate.getTime()));
 					
 					fetchAndReloadSchedule();
 				} else {
@@ -79,10 +77,10 @@ public class TimetableFragment extends Fragment {
 			@Override
 			public void onClick(View view) {
 				if(Utilities.hasWifi()){
-					date.add(Calendar.DAY_OF_YEAR, 1);
+					Variables.get().timetableDate.add(Calendar.DAY_OF_YEAR, 1);
 					
 					SimpleDateFormat sdf = new SimpleDateFormat("d.M.yyyy");
-					((TextView)getView().findViewById(R.id.dateLabel)).setText(sdf.format(date.getTime()));
+					((TextView)getView().findViewById(R.id.dateLabel)).setText(sdf.format(Variables.get().timetableDate.getTime()));
 					
 					fetchAndReloadSchedule();
 				} else {
@@ -99,7 +97,7 @@ public class TimetableFragment extends Fragment {
 		super.onResume();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("d.M.yyyy");
-		((TextView)getView().findViewById(R.id.dateLabel)).setText(sdf.format(date.getTime()));
+		((TextView)getView().findViewById(R.id.dateLabel)).setText(sdf.format(Variables.get().timetableDate.getTime()));
 		
 		if(!Utilities.hasWifi()){
 			getView().findViewById(R.id.previousButton).setVisibility(View.GONE);
@@ -123,11 +121,11 @@ public class TimetableFragment extends Fragment {
 			getView().findViewById(R.id.nextButton).setVisibility(View.VISIBLE);
 		}
 		
-		date = Calendar.getInstance();
+		Variables.get().timetableDate = Calendar.getInstance();
 		lessons = Variables.get().user.lessons;
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("d.M.yyyy");
-		((TextView)getView().findViewById(R.id.dateLabel)).setText(sdf.format(date.getTime()));
+		((TextView)getView().findViewById(R.id.dateLabel)).setText(sdf.format(Variables.get().timetableDate.getTime()));
 		
 		reloadSchedule();
 	}
@@ -135,7 +133,7 @@ public class TimetableFragment extends Fragment {
 	private boolean running = false;
 	public void fetchAndReloadSchedule(){
 		final Calendar original = Calendar.getInstance();
-		original.setTimeInMillis(date.getTimeInMillis());
+		original.setTimeInMillis(Variables.get().timetableDate.getTimeInMillis());
 		
 		tt.setVisibility(View.GONE);
 		getView().findViewById(R.id.noLessonsLabel).setVisibility(View.GONE);
@@ -146,7 +144,7 @@ public class TimetableFragment extends Fragment {
 			public void runAsync() {
 				if(Utilities.hasWifi()){
 					if(running){
-						while(running && original.compareTo(date) == 0) {
+						while(running && original.compareTo(Variables.get().timetableDate) == 0) {
 							try {
 								Thread.sleep(100);
 							} catch (InterruptedException e) {
@@ -154,7 +152,7 @@ public class TimetableFragment extends Fragment {
 							}
 						}
 						
-						if(running || original.compareTo(date) != 0) return;
+						if(running || original.compareTo(Variables.get().timetableDate) != 0) return;
 					}
 					
 					running = true;
@@ -165,9 +163,9 @@ public class TimetableFragment extends Fragment {
 						Parser.parseSchedulePage((Document) result, Variables.get().user);
 					}
 					
-					result = Variables.get().account.loadSchedule(date, date);
+					result = Variables.get().account.loadSchedule(Variables.get().timetableDate, Variables.get().timetableDate);
 					
-					if(result.getClass() == Document.class && original.compareTo(date) == 0){
+					if(result.getClass() == Document.class && original.compareTo(Variables.get().timetableDate) == 0){
 						lessons = Parser.parseSchedule((Document) result);
 						if(lessons == null) {
 							resetToTodayAndReload();
@@ -184,7 +182,7 @@ public class TimetableFragment extends Fragment {
 			
 			@Override
 			public void runSyncWhenDone() {
-				if(original.compareTo(date) == 0) {
+				if(original.compareTo(Variables.get().timetableDate) == 0) {
 					getView().findViewById(R.id.loadingIcon).setVisibility(View.GONE);
 					reloadSchedule();
 				}

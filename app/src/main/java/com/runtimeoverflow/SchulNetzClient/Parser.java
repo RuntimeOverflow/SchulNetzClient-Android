@@ -407,7 +407,7 @@ public class Parser {
 				lesson.endDate = Calendar.getInstance();
 				if(event.getElementsByTag("end_date").size() > 0) lesson.endDate.setTime(sdf.parse(event.getElementsByTag("end_date").get(0).ownText()));
 				
-				if(event.getElementsByTag("text").size() > 0) lesson.lessionIdentifier = event.getElementsByTag("text").get(0).ownText();
+				if(event.getElementsByTag("text").size() > 0) lesson.lessonIdentifier = event.getElementsByTag("text").get(0).ownText();
 				if(event.getElementsByTag("zimmer").size() > 0 && !event.getElementsByTag("zimmer").get(0).ownText().isEmpty()) lesson.roomNumber = Integer.parseInt(event.getElementsByTag("zimmer").get(0).ownText());
 				if(event.getElementsByTag("color").size() > 0) lesson.color = Color.parseColor(event.getElementsByTag("color").get(0).ownText());
 				if(event.getElementsByTag("event_type").size() > 0) lesson.type = event.getElementsByTag("event_type").get(0).ownText();

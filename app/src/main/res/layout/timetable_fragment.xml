@@ -16,7 +16,7 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
 	
-	<com.runtimeoverflow.SchulNetzClient.TimeTableView
+	<com.runtimeoverflow.SchulNetzClient.TimetableView
 		android:id="@+id/timeTableView"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"

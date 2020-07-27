@@ -185,10 +185,10 @@ public class SigninActivity extends AppCompatActivity {
 												if(doc.getClass() == Document.class) Parser.parseTransactions((Document)doc, Variables.get().user);
 												doc = account.loadPage("21111");
 												if(doc.getClass() == Document.class) Parser.parseAbsences((Document)doc, Variables.get().user);
-												doc = Variables.get().account.loadPage("22202");
+												doc = account.loadPage("22202");
 												if(doc.getClass() == Document.class) Parser.parseSchedulePage((Document)doc, Variables.get().user);
 												
-												doc = Variables.get().account.loadSchedule(Calendar.getInstance(), Calendar.getInstance());
+												doc = account.loadSchedule(Calendar.getInstance(), Calendar.getInstance());
 												if(doc.getClass() == Document.class) Variables.get().user.lessons = Parser.parseSchedule((Document)doc);
 												
 												Variables.get().user.processConnections();

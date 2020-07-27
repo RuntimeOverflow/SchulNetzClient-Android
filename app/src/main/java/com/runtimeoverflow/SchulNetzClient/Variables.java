@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.runtimeoverflow.SchulNetzClient.Data.User;
 
+import java.util.Calendar;
+
 public class Variables {
     private static Variables instance;
 
@@ -11,6 +13,8 @@ public class Variables {
 
     public Account account;
     public User user;
+    
+    public Calendar timetableDate = Calendar.getInstance();
     
     public Object activityParameter = null;
     

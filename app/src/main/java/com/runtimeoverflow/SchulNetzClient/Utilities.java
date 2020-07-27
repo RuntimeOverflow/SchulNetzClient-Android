@@ -12,12 +12,10 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.runtimeoverflow.SchulNetzClient.Activities.MainActivity;
 import com.runtimeoverflow.SchulNetzClient.Activities.StartActivity;
 
 import java.math.BigDecimal;
@@ -81,7 +79,7 @@ public class Utilities {
 		PendingIntent pendingIntent = PendingIntent.getActivity(Variables.get().currentContext, 0, intent, 0);
 		
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(Variables.get().currentContext, "com.runtimeoverflow.SchulNetzClient");
-		builder.setSmallIcon(R.drawable.ic_appicon_transparent);
+		builder.setSmallIcon(R.drawable.ic_notification);
 		builder.setContentTitle(title);
 		builder.setContentText(content).setStyle(new NotificationCompat.BigTextStyle().bigText(content));
 		builder.setVisibility(NotificationCompat.VISIBILITY_PRIVATE);

@@ -87,14 +87,18 @@ public class User {
 		}
 		
 		for(Lesson l : lessons){
-			if(l.lessionIdentifier.split("-").length >= 3){
-				Subject s = subjectForShortName(l.lessionIdentifier.split("-")[0]);
-				s.lessons.add(l);
-				l.subject = s;
+			if(l.lessonIdentifier.split("-").length >= 3){
+				Subject s = subjectForShortName(l.lessonIdentifier.split("-")[0]);
+				if(s != null){
+					//s.lessons.add(l);
+					l.subject = s;
+				}
 				
-				Teacher t = teacherForShortName(l.lessionIdentifier.split("-")[2]);
-				t.lessons.add(l);
-				l.teacher = t;
+				Teacher t = teacherForShortName(l.lessonIdentifier.split("-")[2]);
+				if(t != null){
+					//t.lessons.add(l);
+					l.teacher = t;
+				}
 			}
 			
 			l.room = roomMap.get(l.roomNumber);
@@ -127,14 +131,16 @@ public class User {
 	
 	public void processLessons(ArrayList<Lesson> lessons){
 		for(Lesson l : lessons){
-			if(l.lessionIdentifier.split("-").length >= 3){
-				Subject s = subjectForShortName(l.lessionIdentifier.split("-")[0]);
-				s.lessons.add(l);
-				l.subject = s;
+			if(l.lessonIdentifier.split("-").length >= 3){
+				Subject s = subjectForShortName(l.lessonIdentifier.split("-")[0]);
+				if(s != null){
+					l.subject = s;
+				}
 				
-				Teacher t = teacherForShortName(l.lessionIdentifier.split("-")[2]);
-				t.lessons.add(l);
-				l.teacher = t;
+				Teacher t = teacherForShortName(l.lessonIdentifier.split("-")[2]);
+				if(t != null){
+					l.teacher = t;
+				}
 			}
 			
 			l.room = roomMap.get(l.roomNumber);
