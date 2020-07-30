@@ -166,7 +166,7 @@ public class TimetableFragment extends Fragment {
 					result = Variables.get().account.loadSchedule(Variables.get().timetableDate, Variables.get().timetableDate);
 					
 					if(result.getClass() == Document.class && original.compareTo(Variables.get().timetableDate) == 0){
-						lessons = Parser.parseSchedule((Document) result);
+						lessons = Parser.parseSchedule((Document)result);
 						if(lessons == null) {
 							resetToTodayAndReload();
 							running = false;

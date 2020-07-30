@@ -22,7 +22,6 @@
 		</LinearLayout>
 		
 		<View
-			android:id="@+id/divider3"
 			android:layout_width="match_parent"
 			android:layout_height="1dp"
 			android:background="?android:attr/listDivider"
@@ -57,7 +56,6 @@
 			app:layout_constraintTop_toTopOf="@+id/textView7" />
 		
 		<Space
-			android:id="@+id/space"
 			android:layout_width="0dp"
 			android:layout_height="10dp"
 			app:layout_constraintEnd_toEndOf="parent"

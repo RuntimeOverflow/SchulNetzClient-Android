@@ -67,7 +67,7 @@ public class Utilities {
 		SharedPreferences prefs = Variables.get().currentContext.getSharedPreferences("com.runtimeoverflow.SchulNetzClient", Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = prefs.edit();
 		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			NotificationChannel channel = new NotificationChannel("com.runtimeoverflow.SchulNetzClient", Variables.get().currentContext.getString(R.string.app_name), NotificationManager.IMPORTANCE_DEFAULT);
 			NotificationManager notificationManager = Variables.get().currentContext.getSystemService(NotificationManager.class);
 			notificationManager.createNotificationChannel(channel);

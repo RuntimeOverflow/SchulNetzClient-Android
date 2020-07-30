@@ -11,6 +11,7 @@ import androidx.work.WorkerParameters;
 import com.runtimeoverflow.SchulNetzClient.Data.Absence;
 import com.runtimeoverflow.SchulNetzClient.Data.Change;
 import com.runtimeoverflow.SchulNetzClient.Data.Grade;
+import com.runtimeoverflow.SchulNetzClient.Data.Student;
 import com.runtimeoverflow.SchulNetzClient.Data.Transaction;
 import com.runtimeoverflow.SchulNetzClient.Data.User;
 
@@ -33,24 +34,45 @@ public class BackgroundWorker extends Worker {
 		SharedPreferences prefs = getApplicationContext().getSharedPreferences("com.runtimeoverflow.SchulNetzClient", Context.MODE_PRIVATE);
 		if(prefs == null || prefs.getString("host", "").length() <= 0 || prefs.getString("username", "").length() <= 0 || prefs.getString("password", "").length() <= 0) return Result.success();
 		
+		User previous = User.load();
 		User user = new User();
 		Account account = new Account(prefs.getString("host", null), prefs.getString("username", null), prefs.getString("password", null), false);
 		
-		account.signIn();
+		Object res = account.signIn();
+		if(!((res.getClass() == boolean.class && (boolean)res) || (res.getClass() == Boolean.class && (Boolean)res))) return Result.retry();
+		
 		Object doc = account.loadPage("22352");
 		if(doc.getClass() == Document.class) Parser.parseTeachers((Document)doc, user);
+		else user.teachers = previous.teachers;
 		doc = account.loadPage("22326");
 		if(doc.getClass() == Document.class) Parser.parseSubjects((Document)doc, user);
+		else user.subjects = previous.subjects;
 		if(doc.getClass() == Document.class) Parser.parseStudents((Document)doc, user);
+		else user.students = previous.students;
 		doc = account.loadPage("21311");
 		if(doc.getClass() == Document.class) Parser.parseGrades((Document)doc, user);
+		else user.subjects = previous.subjects;
 		doc = account.loadPage("21411");
 		if(doc.getClass() == Document.class) Parser.parseSelf((Document)doc, user);
+		else{
+			for(Student s : user.students){
+				if(s.firstName.toLowerCase().equals(previous.self.firstName.toLowerCase()) && s.lastName.toLowerCase().equals(previous.self.lastName.toLowerCase())){
+					s.self = true;
+					break;
+				}
+			}
+		}
 		if(doc.getClass() == Document.class) Parser.parseTransactions((Document)doc, user);
+		else user.transactions = previous.transactions;
 		doc = account.loadPage("21111");
 		if(doc.getClass() == Document.class) Parser.parseAbsences((Document)doc, user);
+		else user.absences = previous.absences;
 		doc = account.loadPage("22202");
 		if(doc.getClass() == Document.class) Parser.parseSchedulePage((Document)doc, user);
+		else{
+			user.lessonTypeMap = previous.lessonTypeMap;
+			user.roomMap = previous.roomMap;
+		}
 		
 		doc = account.loadSchedule(Calendar.getInstance(), Calendar.getInstance());
 		if(doc.getClass() == Document.class) user.lessons = Parser.parseSchedule((Document)doc);
@@ -58,9 +80,7 @@ public class BackgroundWorker extends Worker {
 		user.processConnections();
 		account.signOut();
 		
-		ArrayList<Change<?>> changes = Change.getChanges(Variables.get().user, user);
-		
-		Variables.get().user = user;
+		ArrayList<Change<?>> changes = Change.getChanges(previous, user);
 		user.save();
 		
 		if(prefs.getBoolean("notificationsEnabled", true)) for(Change<?> change : changes){

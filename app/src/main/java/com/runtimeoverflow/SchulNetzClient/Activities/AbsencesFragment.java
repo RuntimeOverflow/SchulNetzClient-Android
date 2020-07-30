@@ -72,6 +72,7 @@ public class AbsencesFragment extends Fragment {
 		if(getView() == null) return;
 		
 		LinearLayout absencesList = getView().findViewById(R.id.absencesList);
+		if(absencesList.getChildCount() > 1) absencesList.removeViews(1, absencesList.getChildCount() - 1);
 		
 		int lessonCount = 0;
 		for(Absence a : Variables.get().user.absences){

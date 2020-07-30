@@ -32,6 +32,8 @@ public class TransactionsActivity extends AppCompatActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setTitle(getString(R.string.transactions));
 		
+		((LinearLayout)findViewById(R.id.transactionsList)).removeAllViews();
+		
 		double balance = 0;
 		for(final Transaction t : Variables.get().user.transactions){
 			final ConstraintLayout row = (ConstraintLayout)LayoutInflater.from(Variables.get().currentContext).inflate(R.layout.transaction_cell, null);

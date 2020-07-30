@@ -7,7 +7,6 @@
 	<string name="signout">Sign out</string>
 	<string name="signoutConfirmation">Are you sure?</string>
 	<string name="invalidCreds">Invalid username/password</string>
-	<string name="invalidHost">Invalid host</string>
 	<string name="selectHost">Select host</string>
 	<string name="host">Host</string>
 	<string name="noConnection">No internet connection</string>
@@ -32,7 +31,6 @@
 	
 	<string name="students">Students</string>
 	<string name="teachers">Teachers</string>
-	<string name="fullName">Full Name</string>
 	<string name="classs">Class</string>
 	<string name="home">Home</string>
 	<string name="phone">Phone</string>

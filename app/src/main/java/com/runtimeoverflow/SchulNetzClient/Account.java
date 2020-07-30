@@ -270,6 +270,8 @@ public class Account {
 			}
 		}
 		
+		if(!signedIn) return null;
+		
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			

@@ -39,6 +39,8 @@ public class Parser {
 
 				if(mainRow.children().size() < 5 || mainRow.children().get(0).children().size() <= 0 || !mainRow.children().get(0).hasText() || !mainRow.children().get(0).children().get(0).hasText()) continue;
 				Subject s = user.subjectForIdentifier(mainRow.children().get(0).children().get(0).ownText().trim());
+				if(s == null) continue;
+				
 				s.name = mainRow.children().get(0).ownText().trim();
 				s.confirmed = mainRow.children().get(3).children().size() <= 0 || !mainRow.children().get(3).children().get(0).hasAttr("href");
 				
@@ -103,8 +105,8 @@ public class Parser {
 			}
 
 			for(Element subject : list.children()){
-				Subject s = new Subject();
 				if(subject.getElementsByClass("mdl-radio__label").size() <= 0) continue;
+				Subject s = new Subject();
 				
 				s.identifier = subject.getElementsByClass("mdl-radio__label").get(0).ownText().trim();
 				
@@ -138,6 +140,7 @@ public class Parser {
 				user.students = previous;
 				return false;
 			} else if(rows.size() == 2) return true;
+			
 			rows.remove(0);
 			rows.remove(0);
 
@@ -191,6 +194,7 @@ public class Parser {
 				user.teachers = previous;
 				return false;
 			} else if(rows.size() == 2) return true;
+			
 			rows.remove(0);
 			rows.remove(0);
 
@@ -217,10 +221,11 @@ public class Parser {
 	public static boolean parseSelf(Document doc, User user){
 		try{
 			Element card = doc.getElementById("content-card");
-			if(card.getElementsByTag("table").size() < 2 || card.getElementsByTag("table").get(0).children().size() <= 0) return false;
+			if(card == null || card.getElementsByTag("table").size() < 2 || card.getElementsByTag("table").get(0).children().size() <= 0) return false;
 
 			Element tableBody = card.getElementsByTag("table").get(0).children().get(0);
 			if(tableBody.children().size() < 2 || tableBody.children().get(0).children().size() < 2 || tableBody.children().get(1).children().size() < 2) return false;
+			
 			String lastName = tableBody.children().get(0).children().get(1).ownText().trim();
 			String firstName = tableBody.children().get(1).children().get(1).ownText().trim();
 			
@@ -248,7 +253,7 @@ public class Parser {
 		
 		try{
 			Element card = doc.getElementById("content-card");
-			if(card.getElementsByTag("table").size() < 2 || card.getElementsByTag("table").get(1).children().size() <= 0) {
+			if(card == null || card.getElementsByTag("table").size() < 2 || card.getElementsByTag("table").get(1).children().size() <= 0) {
 				user.transactions = previous;
 				return false;
 			}
@@ -323,10 +328,10 @@ public class Parser {
 				SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 				
 				a.startDate = Calendar.getInstance();
-				a.startDate.setTime(sdf.parse(row.children().get(0).ownText()));
+				a.startDate.setTime(sdf.parse(row.children().get(0).ownText().trim()));
 				
 				a.endDate = Calendar.getInstance();
-				a.endDate.setTime(sdf.parse(row.children().get(1).ownText()));
+				a.endDate.setTime(sdf.parse(row.children().get(1).ownText().trim()));
 				
 				a.reason = row.children().get(2).ownText().trim();
 				a.additionalInformation = row.children().get(3).ownText().trim();
@@ -367,16 +372,17 @@ public class Parser {
 			for(Element type : types){
 				if(!type.hasAttr("href")) continue;
 				else if(!type.attr("href").contains("=")) continue;
+				else if(type.attr("href").lastIndexOf("=") + 1 >= type.attr("href").length()) continue;
 				
-				String shortName = type.attr("href").substring(type.attr("href").lastIndexOf("="));
+				String shortName = type.attr("href").substring(type.attr("href").lastIndexOf("=") + 1);
 				user.lessonTypeMap.put(shortName, type.ownText());
 			}
 			
-			if(!doc.html().contains("var zimmerliste = ")) return false;
+			if(!doc.html().contains("var zimmerliste = [{")) return false;
 			String jsDict = doc.html().substring(doc.html().indexOf("var zimmerliste = [{") + "var zimmerliste = [{".length());
 			jsDict = jsDict.substring(0, jsDict.indexOf("}];"));
 			
-			String[] entries = jsDict.split("\\},\\{");
+			String[] entries = jsDict.split("},\\{");
 			for(String entry : entries){
 				if(!entry.matches("\".*\":[0-9]*,\".*\":\".*\"")) continue;
 				
@@ -421,13 +427,9 @@ public class Parser {
 			}
 		} catch(Exception e){
 			e.printStackTrace();
-			return null;
+			return new ArrayList<>();
 		}
 		
 		return list;
-	}
-	
-	public static boolean isSignedIn(Document doc){
-		return doc.getElementById("nav-main-menu") != null;
 	}
 }
