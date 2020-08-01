@@ -382,7 +382,7 @@ public class Parser {
 			String jsDict = doc.html().substring(doc.html().indexOf("var zimmerliste = [{") + "var zimmerliste = [{".length());
 			jsDict = jsDict.substring(0, jsDict.indexOf("}];"));
 			
-			String[] entries = jsDict.split("},\\{");
+			String[] entries = jsDict.split("\\},\\{");
 			for(String entry : entries){
 				if(!entry.matches("\".*\":[0-9]*,\".*\":\".*\"")) continue;
 				

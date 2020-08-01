@@ -66,7 +66,7 @@ public class GradesFragment extends Fragment {
 				if(Utilities.hasWifi()){
 					Object result = Variables.get().account.loadPage("21311");
 					
-					if(result.getClass() == Document.class){
+					if(result != null && result.getClass() == Document.class){
 						Parser.parseGrades((Document) result, Variables.get().user);
 						Variables.get().user.processConnections();
 					}

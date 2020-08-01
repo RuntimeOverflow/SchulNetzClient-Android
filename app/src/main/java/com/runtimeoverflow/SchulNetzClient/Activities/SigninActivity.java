@@ -163,7 +163,7 @@ public class SigninActivity extends AppCompatActivity {
 									    editor.putString("password", account.password);
 									    editor.apply();
 									
-										((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+										if(getCurrentFocus() != null) ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 									    
 									    findViewById(R.id.contentLayout).setVisibility(View.GONE);
 									    findViewById(R.id.accountLoadingIcon).setVisibility(View.VISIBLE);

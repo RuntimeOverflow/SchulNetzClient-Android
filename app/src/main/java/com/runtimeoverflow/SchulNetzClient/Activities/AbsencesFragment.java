@@ -54,7 +54,7 @@ public class AbsencesFragment extends Fragment {
 				if(Utilities.hasWifi()){
 					Object result = Variables.get().account.loadPage("21111");
 					
-					if(result.getClass() == Document.class){
+					if(result != null && result.getClass() == Document.class){
 						Parser.parseAbsences((Document) result, Variables.get().user);
 						Variables.get().user.processConnections();
 					}
@@ -93,6 +93,7 @@ public class AbsencesFragment extends Fragment {
 					row.findViewById(R.id.reportsButton).setVisibility(targetVisibility);
 					
 					row.findViewById(R.id.reportsList).setVisibility(View.GONE);
+					((Button)row.findViewById(R.id.reportsButton)).setText(R.string.showReports);
 				}
 			});
 			
@@ -115,8 +116,10 @@ public class AbsencesFragment extends Fragment {
 			
 			int index = 0;
 			for(Subject s : a.subjects){
+				if(s == null) continue;
+				
 				TextView report = new TextView(getContext());
-				report.setText(Integer.toString(index + 1) + ". " + (!s.name.isEmpty() ? s.name : s.shortName));
+				report.setText(Integer.toString(index + 1) + ". " + (s != null ? s.name : s.shortName));
 				report.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
 				
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);

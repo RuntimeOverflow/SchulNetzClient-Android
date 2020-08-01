@@ -110,20 +110,20 @@ public class PeopleFragment extends Fragment {
 				if(Utilities.hasWifi()){
 					Object result = Variables.get().account.loadPage("22352");
 					
-					if(result.getClass() == Document.class){
+					if(result != null && result.getClass() == Document.class){
 						Parser.parseTeachers((Document) result, Variables.get().user);
 					}
 					
 					result = Variables.get().account.loadPage("22326");
 					
-					if(result.getClass() == Document.class){
+					if(result != null && result.getClass() == Document.class){
 						Parser.parseSubjects((Document) result, Variables.get().user);
 						Parser.parseStudents((Document) result, Variables.get().user);
 					}
 					
 					result = Variables.get().account.loadPage("21311");
 					
-					if(result.getClass() == Document.class){
+					if(result != null && result.getClass() == Document.class){
 						Parser.parseGrades((Document) result, Variables.get().user);
 						Variables.get().user.processConnections();
 					}

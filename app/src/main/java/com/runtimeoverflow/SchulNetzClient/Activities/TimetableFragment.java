@@ -159,13 +159,13 @@ public class TimetableFragment extends Fragment {
 					
 					Object result = Variables.get().account.loadPage("22202");
 					
-					if(result.getClass() == Document.class){
+					if(result != null && result.getClass() == Document.class){
 						Parser.parseSchedulePage((Document) result, Variables.get().user);
 					}
 					
 					result = Variables.get().account.loadSchedule(Variables.get().timetableDate, Variables.get().timetableDate);
 					
-					if(result.getClass() == Document.class && original.compareTo(Variables.get().timetableDate) == 0){
+					if(result != null && result.getClass() == Document.class && original.compareTo(Variables.get().timetableDate) == 0){
 						lessons = Parser.parseSchedule((Document)result);
 						if(lessons == null) {
 							resetToTodayAndReload();

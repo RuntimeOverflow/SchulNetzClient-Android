@@ -122,7 +122,7 @@ public class SettingsFragment extends Fragment {
 				if(Utilities.hasWifi()){
 					Object result = Variables.get().account.loadPage("21411");
 					
-					if(result.getClass() == Document.class){
+					if(result != null && result.getClass() == Document.class){
 						Parser.parseSelf((Document) result, Variables.get().user);
 						Parser.parseTransactions((Document) result, Variables.get().user);
 						
