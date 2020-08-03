@@ -64,7 +64,13 @@ public class GradesFragment extends Fragment {
 			@Override
 			public void runAsync() {
 				if(Utilities.hasWifi()){
-					Object result = Variables.get().account.loadPage("21311");
+					Object result = Variables.get().account.loadPage("22326");
+					
+					if(result != null && result.getClass() == Document.class){
+						Parser.parseSubjects((Document) result, Variables.get().user);
+					}
+					
+					result = Variables.get().account.loadPage("21311");
 					
 					if(result != null && result.getClass() == Document.class){
 						Parser.parseGrades((Document) result, Variables.get().user);

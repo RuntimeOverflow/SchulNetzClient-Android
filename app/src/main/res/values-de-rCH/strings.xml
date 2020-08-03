@@ -52,4 +52,5 @@
 	<string name="newTransaction">Saldo geändert</string>
 	<string name="noGrades">Keine Noten</string>
 	<string name="noLessons">Keine Lektionen</string>
+	<string name="copied">Kopiert!</string>
 </resources>

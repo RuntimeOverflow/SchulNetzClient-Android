@@ -130,7 +130,7 @@ public class StudentActivity extends AppCompatActivity {
 			@Override
 			public boolean onLongClick(View view) {
 				if(Button.class.isAssignableFrom(view.getClass())){
-					Toast.makeText(Variables.get().currentContext, "Copied!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(Variables.get().currentContext, getString(R.string.copied), Toast.LENGTH_SHORT).show();
 					
 					ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 					ClipData clip = ClipData.newPlainText("text", ((Button)view).getText());

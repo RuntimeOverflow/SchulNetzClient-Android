@@ -163,7 +163,7 @@ public class TimetableFragment extends Fragment {
 						Parser.parseSchedulePage((Document) result, Variables.get().user);
 					}
 					
-					result = Variables.get().account.loadSchedule(Variables.get().timetableDate, Variables.get().timetableDate);
+					result = Variables.get().account.loadSchedule(original, original);
 					
 					if(result != null && result.getClass() == Document.class && original.compareTo(Variables.get().timetableDate) == 0){
 						lessons = Parser.parseSchedule((Document)result);

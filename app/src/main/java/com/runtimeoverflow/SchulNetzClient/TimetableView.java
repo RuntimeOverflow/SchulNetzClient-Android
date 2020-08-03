@@ -85,7 +85,7 @@ public class TimetableView extends View {
 		if(startOrdered.size() > 0) minHour = startOrdered.get(0).start.get(Calendar.HOUR_OF_DAY);
 		
 		ArrayList<Lesson.ScheduleLesson> endOrdered = Lesson.ScheduleLesson.orderByEndTime(lessons);
-		if(endOrdered.size() > 0) maxHour = endOrdered.get(endOrdered.size() - 1).end.get(Calendar.HOUR_OF_DAY) + 1;
+		if(endOrdered.size() > 0) maxHour = Math.min(endOrdered.get(endOrdered.size() - 1).end.get(Calendar.HOUR_OF_DAY) + 1, 24);
 		
 		double heightPerMinute = (getHeight() - topOffset - bottomOffset) / (double)(maxHour - minHour) / 60.0;
 		
@@ -111,7 +111,7 @@ public class TimetableView extends View {
 			stroke.setColor(ColorUtils.blendARGB(l.lesson.color, Color.BLACK, 0.2f));
 			text.setColor(ColorUtils.blendARGB(l.lesson.color, Color.BLACK, 0.2f));
 			
-			double y = (double)l.start.get(Calendar.MINUTE) + (l.start.get(Calendar.HOUR_OF_DAY) - minHour) * 60.0 - 1;
+			double y = (double)l.start.get(Calendar.MINUTE) + (l.start.get(Calendar.HOUR_OF_DAY) - minHour) * 60.0;
 			double height = (double)l.end.get(Calendar.MINUTE) + (l.end.get(Calendar.HOUR_OF_DAY) - minHour) * 60.0;
 			if(l.end.compareTo(c) == 0) height = (maxHour - minHour) * 60 * 60;
 			double width = (getWidth() - leftOffset) / (float)l.total;
@@ -123,20 +123,22 @@ public class TimetableView extends View {
 				text.getTextBounds(title, 0, title.length(), stringBounds);
 				if(width < stringBounds.width() + getResources().getDisplayMetrics().density * 24 + timeBounds.width()) title = l.lesson.subject.shortName + " [" + l.lesson.room + "]";
 				text.getTextBounds(title, 0, title.length(), stringBounds);
+				if(width < stringBounds.width() + getResources().getDisplayMetrics().density * 24 + timeBounds.width()) title = (l.lesson.subject.name != null ? l.lesson.subject.name : l.lesson.subject.shortName);
+				text.getTextBounds(title, 0, title.length(), stringBounds);
 				if(width < stringBounds.width() + getResources().getDisplayMetrics().density * 24 + timeBounds.width()) title = l.lesson.subject.shortName;
 			} else {
-				title = l.lesson.lessonIdentifier  + " [" + l.lesson.room + "]";
+				title = l.lesson.lessonIdentifier + " [" + l.lesson.room + "]";
 				text.getTextBounds(title, 0, title.length(), stringBounds);
 				if(width < stringBounds.width() + getResources().getDisplayMetrics().density * 24 + timeBounds.width()) title = l.lesson.lessonIdentifier;
 			}
 			
 			text.getTextBounds(title, 0, title.length(), stringBounds);
 			
-			canvas.drawRect((float)(leftOffset + x), (float)(topOffset + y * heightPerMinute), (float)(x + leftOffset + width), (float)(topOffset + height * heightPerMinute), fill);
-			canvas.drawRect((float)(leftOffset + x) + stroke.getStrokeWidth() / 2, (float)(topOffset + y * heightPerMinute) + stroke.getStrokeWidth() / 2, (float)(x + leftOffset + width) - stroke.getStrokeWidth() / 2, (float)(topOffset + height * heightPerMinute) - stroke.getStrokeWidth() / 2, stroke);
+			canvas.drawRect((float)(leftOffset + x), (float)(topOffset + y * heightPerMinute) - 1, (float)(x + leftOffset + width), (float)(topOffset + height * heightPerMinute), fill);
+			canvas.drawRect((float)(leftOffset + x) + stroke.getStrokeWidth() / 2, (float)(topOffset + y * heightPerMinute) + stroke.getStrokeWidth() / 2 - 1, (float)(x + leftOffset + width) - stroke.getStrokeWidth() / 2, (float)(topOffset + height * heightPerMinute) - stroke.getStrokeWidth() / 2, stroke);
 			if((height - y) * heightPerMinute / 1.5 >= text.getTextSize() && width >= stringBounds.width() + getResources().getDisplayMetrics().density * 24 + timeBounds.width()) canvas.drawText(title, (float)(leftOffset + x + (getResources().getDisplayMetrics().density * 8)), (float)(topOffset + y * heightPerMinute + (height - y) * heightPerMinute / 2 + stringBounds.height() / 3), text);
 			
-			if((height - y) * heightPerMinute >= timeBounds.height() * 2 + 2 * stroke.getStrokeWidth() + getResources().getDisplayMetrics().density * 6){
+			if((height - y) * heightPerMinute >= timeBounds.height() * 2 + 2 * stroke.getStrokeWidth() + getResources().getDisplayMetrics().density * 6 && width >= timeBounds.width() + 2 * getResources().getDisplayMetrics().density * 8){
 				SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 				
 				canvas.drawText(sdf.format(l.start.getTime()), (float)(x + leftOffset + width - timeBounds.width() - getResources().getDisplayMetrics().density * 8), (float)(topOffset + y * heightPerMinute + stroke.getStrokeWidth() + getResources().getDisplayMetrics().density * 2 + timeBounds.height()), text);
