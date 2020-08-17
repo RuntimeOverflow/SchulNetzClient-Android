@@ -204,7 +204,8 @@ public class Account {
 	
 	private ArrayList<String> queue = new ArrayList<>();
 	public Object loadPage(String pageId){
-		if((!signedIn && !signingIn) || signingOut) return null;
+		if(signingOut) return null;
+		else if(!signedIn && !signingIn) signIn();
 		
 		if(queue.contains(pageId)) return false;
 		
@@ -247,7 +248,10 @@ public class Account {
 			con.disconnect();
 			
 			queue.remove(0);
-			return src;
+			
+			signedIn = src.getElementById("nav-main-menu") != null;
+			if(!signedIn) return null;
+			else return src;
 		} catch (IOException e) {
 			e.printStackTrace();
 			queue.remove(0);
@@ -262,7 +266,7 @@ public class Account {
 	public Object loadSchedule(Calendar from, Calendar to, String view){
 		if((!signedIn && !signingIn) || signingOut) return null;
 		
-		while(signingIn) {
+		while(signingIn || queue.size() > 0) {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {

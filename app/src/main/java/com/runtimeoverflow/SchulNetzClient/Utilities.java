@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Handler;
@@ -25,7 +26,13 @@ import java.util.List;
 public class Utilities {
 	public static boolean hasWifi(){
 		ConnectivityManager connectivityManager = (ConnectivityManager)Variables.get().currentContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-		return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
+		if(Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M){
+			if(connectivityManager.getActiveNetwork() == null) return false;
+			else return connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork()).hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork()).hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
+		} else {
+			if(connectivityManager.getActiveNetworkInfo() == null) return false;
+			else return connectivityManager.getActiveNetworkInfo().getState() == NetworkInfo.State.CONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
+		}
 	}
 	
 	public static boolean isInForeground(Context context){
@@ -63,7 +70,7 @@ public class Utilities {
 		t.start();
 	}
 	
-	public static void sendNotifications(String title, String content){
+	public static void sendNotification(String title, String content){
 		SharedPreferences prefs = Variables.get().currentContext.getSharedPreferences("com.runtimeoverflow.SchulNetzClient", Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = prefs.edit();
 		

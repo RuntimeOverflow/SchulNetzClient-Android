@@ -96,6 +96,18 @@ public class TimetableFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Object result = Variables.get().account.loadPage("22202");
+				
+				if(result != null && result.getClass() == Document.class){
+					Parser.parseSchedulePage((Document) result, Variables.get().user);
+				}
+			}
+		});
+		t.start();
+		
 		SimpleDateFormat sdf = new SimpleDateFormat("d.M.yyyy");
 		((TextView)getView().findViewById(R.id.dateLabel)).setText(sdf.format(Variables.get().timetableDate.getTime()));
 		
@@ -157,13 +169,7 @@ public class TimetableFragment extends Fragment {
 					
 					running = true;
 					
-					Object result = Variables.get().account.loadPage("22202");
-					
-					if(result != null && result.getClass() == Document.class){
-						Parser.parseSchedulePage((Document) result, Variables.get().user);
-					}
-					
-					result = Variables.get().account.loadSchedule(original, original);
+					Object result = Variables.get().account.loadSchedule(original, original);
 					
 					if(result != null && result.getClass() == Document.class && original.compareTo(Variables.get().timetableDate) == 0){
 						lessons = Parser.parseSchedule((Document)result);

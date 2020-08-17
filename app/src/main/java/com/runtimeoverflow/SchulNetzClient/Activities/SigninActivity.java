@@ -174,22 +174,22 @@ public class SigninActivity extends AppCompatActivity {
 												Variables.get().user = new User();
 												
 												Object doc = account.loadPage("22352");
-												if(doc.getClass() == Document.class) Parser.parseTeachers((Document)doc, Variables.get().user);
+												if(doc != null && doc.getClass() == Document.class) Parser.parseTeachers((Document)doc, Variables.get().user);
 												doc = account.loadPage("22326");
-												if(doc.getClass() == Document.class) Parser.parseSubjects((Document)doc, Variables.get().user);
-												if(doc.getClass() == Document.class) Parser.parseStudents((Document)doc, Variables.get().user);
+												if(doc != null && doc.getClass() == Document.class) Parser.parseSubjects((Document)doc, Variables.get().user);
+												if(doc != null && doc.getClass() == Document.class) Parser.parseStudents((Document)doc, Variables.get().user);
 												doc = account.loadPage("21311");
-												if(doc.getClass() == Document.class) Parser.parseGrades((Document)doc, Variables.get().user);
+												if(doc != null && doc.getClass() == Document.class) Parser.parseGrades((Document)doc, Variables.get().user);
 												doc = account.loadPage("21411");
-												if(doc.getClass() == Document.class) Parser.parseSelf((Document)doc, Variables.get().user);
-												if(doc.getClass() == Document.class) Parser.parseTransactions((Document)doc, Variables.get().user);
+												if(doc != null && doc.getClass() == Document.class) Parser.parseSelf((Document)doc, Variables.get().user);
+												if(doc != null && doc.getClass() == Document.class) Parser.parseTransactions((Document)doc, Variables.get().user);
 												doc = account.loadPage("21111");
-												if(doc.getClass() == Document.class) Parser.parseAbsences((Document)doc, Variables.get().user);
+												if(doc != null && doc.getClass() == Document.class) Parser.parseAbsences((Document)doc, Variables.get().user);
 												doc = account.loadPage("22202");
-												if(doc.getClass() == Document.class) Parser.parseSchedulePage((Document)doc, Variables.get().user);
+												if(doc != null && doc.getClass() == Document.class) Parser.parseSchedulePage((Document)doc, Variables.get().user);
 												
 												doc = account.loadSchedule(Calendar.getInstance(), Calendar.getInstance());
-												if(doc.getClass() == Document.class) Variables.get().user.lessons = Parser.parseSchedule((Document)doc);
+												if(doc != null && doc.getClass() == Document.class) Variables.get().user.lessons = Parser.parseSchedule((Document)doc);
 												
 												Variables.get().user.processConnections();
 												Variables.get().user.save();

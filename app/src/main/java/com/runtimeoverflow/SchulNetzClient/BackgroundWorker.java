@@ -39,21 +39,21 @@ public class BackgroundWorker extends Worker {
 		Account account = new Account(prefs.getString("host", null), prefs.getString("username", null), prefs.getString("password", null), false);
 		
 		Object res = account.signIn();
-		if(!((res.getClass() == boolean.class && (boolean)res) || (res.getClass() == Boolean.class && (Boolean)res))) return Result.retry();
+		if(res == null || !((res.getClass() == boolean.class && (boolean)res) || (res.getClass() == Boolean.class && (Boolean)res))) return Result.retry();
 		
 		Object doc = account.loadPage("22352");
-		if(doc.getClass() == Document.class) Parser.parseTeachers((Document)doc, user);
+		if(doc != null && doc.getClass() == Document.class) Parser.parseTeachers((Document)doc, user);
 		else user.teachers = previous.teachers;
 		doc = account.loadPage("22326");
-		if(doc.getClass() == Document.class) Parser.parseSubjects((Document)doc, user);
+		if(doc != null && doc.getClass() == Document.class) Parser.parseSubjects((Document)doc, user);
 		else user.subjects = previous.subjects;
-		if(doc.getClass() == Document.class) Parser.parseStudents((Document)doc, user);
+		if(doc != null && doc.getClass() == Document.class) Parser.parseStudents((Document)doc, user);
 		else user.students = previous.students;
 		doc = account.loadPage("21311");
-		if(doc.getClass() == Document.class) Parser.parseGrades((Document)doc, user);
+		if(doc != null && doc.getClass() == Document.class) Parser.parseGrades((Document)doc, user);
 		else user.subjects = previous.subjects;
 		doc = account.loadPage("21411");
-		if(doc.getClass() == Document.class) Parser.parseSelf((Document)doc, user);
+		if(doc != null && doc.getClass() == Document.class) Parser.parseSelf((Document)doc, user);
 		else{
 			for(Student s : user.students){
 				if(s.firstName.toLowerCase().equals(previous.self.firstName.toLowerCase()) && s.lastName.toLowerCase().equals(previous.self.lastName.toLowerCase())){
@@ -62,20 +62,20 @@ public class BackgroundWorker extends Worker {
 				}
 			}
 		}
-		if(doc.getClass() == Document.class) Parser.parseTransactions((Document)doc, user);
+		if(doc != null && doc.getClass() == Document.class) Parser.parseTransactions((Document)doc, user);
 		else user.transactions = previous.transactions;
 		doc = account.loadPage("21111");
-		if(doc.getClass() == Document.class) Parser.parseAbsences((Document)doc, user);
+		if(doc != null && doc.getClass() == Document.class) Parser.parseAbsences((Document)doc, user);
 		else user.absences = previous.absences;
 		doc = account.loadPage("22202");
-		if(doc.getClass() == Document.class) Parser.parseSchedulePage((Document)doc, user);
+		if(doc != null && doc.getClass() == Document.class) Parser.parseSchedulePage((Document)doc, user);
 		else{
 			user.lessonTypeMap = previous.lessonTypeMap;
 			user.roomMap = previous.roomMap;
 		}
 		
 		doc = account.loadSchedule(Calendar.getInstance(), Calendar.getInstance());
-		if(doc.getClass() == Document.class) user.lessons = Parser.parseSchedule((Document)doc);
+		if(doc != null && doc.getClass() == Document.class) user.lessons = Parser.parseSchedule((Document)doc);
 		
 		user.processConnections();
 		account.signOut();
@@ -92,27 +92,27 @@ public class BackgroundWorker extends Worker {
 			
 			if(c == Grade.class){
 				if((change.type == Change.ChangeType.ADDED && ((Grade)change.current).grade != 0) || (change.type == Change.ChangeType.MODIFIED && change.varName.equals("grade") && ((Grade)change.previous).grade == 0)){
-					Utilities.sendNotifications(getApplicationContext().getString(R.string.newGrade), "[" + ((Grade)change.current).subject.name + "] " + ((Grade)change.current).content + ": " + Double.toString(((Grade)change.current).grade));
+					Utilities.sendNotification(getApplicationContext().getString(R.string.newGrade), "[" + ((Grade)change.current).subject.name + "] " + ((Grade)change.current).content + ": " + Double.toString(((Grade)change.current).grade));
 				} else if(change.type == Change.ChangeType.MODIFIED && change.varName.equals("grade") && ((Grade)change.current).grade != 0){
-					Utilities.sendNotifications(getApplicationContext().getString(R.string.modifiedGrade), "[" + ((Grade)change.current).subject.name + "] " + ((Grade)change.current).content + ": " + Double.toString(((Grade)change.previous).grade) + " -> " + Double.toString(((Grade)change.current).grade));
+					Utilities.sendNotification(getApplicationContext().getString(R.string.modifiedGrade), "[" + ((Grade)change.current).subject.name + "] " + ((Grade)change.current).content + ": " + Double.toString(((Grade)change.previous).grade) + " -> " + Double.toString(((Grade)change.current).grade));
 				}
 			} else if(c == Absence.class){
 				if(change.type == Change.ChangeType.ADDED){
-					SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+					SimpleDateFormat sdf = new SimpleDateFormat("d.MM.yyyy");
 					
 					String body = sdf.format(((Absence)change.current).startDate.getTime()) + (((Absence)change.current).startDate.getTimeInMillis() != ((Absence)change.current).endDate.getTimeInMillis() ? " - " + sdf.format(((Absence)change.current).endDate.getTime()) : "");
-					body += " (" + Integer.toString(((Absence)change.current).lessonCount) + " " + getApplicationContext().getString(R.string.lessons) + ")";
-					Utilities.sendNotifications(((Absence)change.current).excused ? getApplicationContext().getString(R.string.newExcusedAbsence) : getApplicationContext().getString(R.string.newAbsence), body);
+					body += " (" + Integer.toString(((Absence)change.current).lessonCount) + " " + (((Absence)change.current).lessonCount != 1 ? getApplicationContext().getString(R.string.lessons) : getApplicationContext().getString(R.string.lesson)) + ")";
+					Utilities.sendNotification(((Absence)change.current).excused ? getApplicationContext().getString(R.string.newExcusedAbsence) : getApplicationContext().getString(R.string.newAbsence), body);
 				} else if(change.type == Change.ChangeType.MODIFIED && change.varName.equals("excused") && ((Absence)change.current).excused){
 					SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 					
 					String body = sdf.format(((Absence)change.current).startDate.getTime()) + (((Absence)change.current).startDate.getTimeInMillis() != ((Absence)change.current).endDate.getTimeInMillis() ? " - " + sdf.format(((Absence)change.current).endDate.getTime()) : "");
-					body += " (" + Integer.toString(((Absence)change.current).lessonCount) + " " + getApplicationContext().getString(R.string.lessons) + ")";
-					Utilities.sendNotifications(getApplicationContext().getString(R.string.excusedAbsence), body);
+					body += " (" + Integer.toString(((Absence)change.current).lessonCount) + " " + (((Absence)change.current).lessonCount != 1 ? getApplicationContext().getString(R.string.lessons) : getApplicationContext().getString(R.string.lesson)) + ")";
+					Utilities.sendNotification(getApplicationContext().getString(R.string.excusedAbsence), body);
 				}
 			} else if(c == Transaction.class){
 				if(change.type == Change.ChangeType.ADDED){
-					Utilities.sendNotifications(getApplicationContext().getString(R.string.newTransaction), ((Transaction)change.current).reason + " -> " + String.format("%.2f", ((Transaction)change.current).amount));
+					Utilities.sendNotification(getApplicationContext().getString(R.string.newTransaction), ((Transaction)change.current).reason + " -> " + String.format("%.2f", ((Transaction)change.current).amount));
 				}
 			}
 		}

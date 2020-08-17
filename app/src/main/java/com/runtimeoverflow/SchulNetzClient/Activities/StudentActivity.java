@@ -119,7 +119,10 @@ public class StudentActivity extends AppCompatActivity {
 				intent.putExtra("title", currentStudent.firstName + "'s " + getString(R.string.birthday));
 				intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
 				intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, currentStudent.dateOfBirth.getTimeInMillis());
-				intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, currentStudent.dateOfBirth.getTimeInMillis() + 1);
+				Calendar c = Calendar.getInstance();
+				c.setTimeInMillis(currentStudent.dateOfBirth.getTimeInMillis());
+				c.add(Calendar.DAY_OF_YEAR, 1);
+				intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, c.getTimeInMillis() - 1);
 				
 				if(intent.resolveActivity(getPackageManager()) != null) startActivity(intent);
 				else Toast.makeText(Variables.get().currentContext, getString(R.string.noCalendar), Toast.LENGTH_LONG).show();

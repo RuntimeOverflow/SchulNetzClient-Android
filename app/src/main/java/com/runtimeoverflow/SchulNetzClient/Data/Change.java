@@ -127,11 +127,11 @@ public class Change<T> {
 						currentSubIndex++;
 					}
 				}
-			} else if(previousSubject != null && !current.students.contains(previousSubject)) {
+			} else if(previousSubject != null && !current.subjects.contains(previousSubject)) {
 				changes.add(new Change<Subject>(previousSubject, null, "", ChangeType.REMOVED));
 				
 				previousIndex++;
-			} else if(currentSubject != null && !previous.students.contains(currentSubject)) {
+			} else if(currentSubject != null && !previous.subjects.contains(currentSubject)) {
 				changes.add(new Change<Subject>(null, currentSubject, "", ChangeType.ADDED));
 				
 				currentIndex++;
