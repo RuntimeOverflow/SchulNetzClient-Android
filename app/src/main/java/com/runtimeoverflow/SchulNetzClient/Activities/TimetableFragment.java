@@ -189,7 +189,7 @@ public class TimetableFragment extends Fragment {
 			@Override
 			public void runSyncWhenDone() {
 				if(original.compareTo(Variables.get().timetableDate) == 0) {
-					getView().findViewById(R.id.loadingIcon).setVisibility(View.GONE);
+					if(getView() != null) getView().findViewById(R.id.loadingIcon).setVisibility(View.GONE);
 					reloadSchedule();
 				}
 			}

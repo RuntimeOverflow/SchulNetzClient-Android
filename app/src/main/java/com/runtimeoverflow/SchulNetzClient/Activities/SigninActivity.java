@@ -101,7 +101,7 @@ public class SigninActivity extends AppCompatActivity {
 		hostList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-				if(i == 0) ((TextView)adapterView.getChildAt(0)).setTextColor(Color.GRAY);
+				if(i == 0 && adapterView.getChildCount() > 0) ((TextView)adapterView.getChildAt(0)).setTextColor(Color.GRAY);
 
 				if(i == hostList.getCount() - 1) hostField.setVisibility(View.VISIBLE);
 				else hostField.setVisibility(View.GONE);
