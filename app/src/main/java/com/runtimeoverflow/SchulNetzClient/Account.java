@@ -310,8 +310,10 @@ public class Account {
 	}
 
 	private String getCookies(Map<String, List<String>> headers) {
+		if(headers == null) return currentCookies;
+		
 		String cookies = "";
-
+		
 		for(String value : headers.get("Set-Cookie")) {
 			boolean existing = false;
 
