@@ -101,9 +101,13 @@ public class GradesFragment extends Fragment {
 		double negative = 0;
 		
 		int index = 0;
+		int absoluteIndex = 0;
 		TableRow row = null;
 		for(final Subject s : Variables.get().user.subjects){
-			if(s.name == null) continue;
+			if(s.name == null) {
+				absoluteIndex++;
+				continue;
+			}
 			
 			if(!Double.isNaN(s.getAverage())){
 				if(Math.round(s.getAverage() * 2.0) / 2.0 - 4.0 > 0) positive += Math.round(s.getAverage() * 2.0) / 2.0 - 4.0;
@@ -131,11 +135,13 @@ public class GradesFragment extends Fragment {
 			});
 			
 			row.addView(gradeCell);
-			index++;
 			
-			if(index % cellsPerRow == 0){
+			if((index + 1) % cellsPerRow == 0 || absoluteIndex == Variables.get().user.subjects.size() - 1){
 				gradeTable.addView(row);
 			}
+			
+			absoluteIndex++;
+			index++;
 		}
 		
 		((TextView)getView().findViewById(R.id.negativeLabel)).setText((negative == 0 ? "-" : "") + Double.toString(Utilities.roundToDecimalPlaces(negative, 3)));
