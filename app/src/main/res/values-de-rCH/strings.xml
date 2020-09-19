@@ -53,4 +53,5 @@
 	<string name="noGrades">Keine Noten</string>
 	<string name="noLessons">Keine Lektionen</string>
 	<string name="copied">Kopiert!</string>
+	<string name="timetableUnavailable">Stundenplan nicht verfügbar</string>
 </resources>

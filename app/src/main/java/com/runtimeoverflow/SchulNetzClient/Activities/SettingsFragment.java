@@ -88,6 +88,7 @@ public class SettingsFragment extends Fragment {
 			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 				editor.putInt("defaultPage", resIds[adapterView.getSelectedItemPosition()]);
 				editor.apply();
+				editor.commit();
 			}
 			
 			@Override
@@ -99,6 +100,7 @@ public class SettingsFragment extends Fragment {
 			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 				editor.putBoolean("notificationsEnabled", compoundButton.isChecked());
 				editor.apply();
+				editor.commit();
 			}
 		});
 		
@@ -123,10 +125,15 @@ public class SettingsFragment extends Fragment {
 					Object result = Variables.get().account.loadPage("21411");
 					
 					if(result != null && result.getClass() == Document.class){
+						User copy = Variables.get().user.copy();
+						
 						Parser.parseSelf((Document) result, Variables.get().user);
 						Parser.parseTransactions((Document) result, Variables.get().user);
 						
 						Variables.get().user.processConnections();
+						
+						Change.publishNotifications(Change.getChanges(copy, Variables.get().user));
+						Variables.get().user.save();
 					}
 				}
 			}
@@ -142,7 +149,6 @@ public class SettingsFragment extends Fragment {
 		if(getView() == null) return;
 		
 		final SharedPreferences prefs = getContext().getSharedPreferences("com.runtimeoverflow.SchulNetzClient", Context.MODE_PRIVATE);
-		final SharedPreferences.Editor editor = prefs.edit();
 		
 		if(Variables.get().user.self != null){
 			((TextView)getView().findViewById(R.id.nameLabel)).setText(Variables.get().user.self.firstName + " " + Variables.get().user.self.lastName);
@@ -179,6 +185,7 @@ public class SettingsFragment extends Fragment {
 				editor.remove("user");
 				
 				editor.apply();
+				editor.commit();
 				
 				startActivity(new Intent(getContext(), StartActivity.class));
 			}

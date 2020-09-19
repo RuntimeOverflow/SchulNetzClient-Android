@@ -162,6 +162,7 @@ public class SigninActivity extends AppCompatActivity {
 									    editor.putString("username", account.username);
 									    editor.putString("password", account.password);
 									    editor.apply();
+									    editor.commit();
 									
 										if(getCurrentFocus() != null) ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 									    

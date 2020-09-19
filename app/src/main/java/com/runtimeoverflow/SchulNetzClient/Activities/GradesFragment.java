@@ -19,8 +19,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.runtimeoverflow.SchulNetzClient.AsyncAction;
+import com.runtimeoverflow.SchulNetzClient.Data.Change;
 import com.runtimeoverflow.SchulNetzClient.Data.Grade;
 import com.runtimeoverflow.SchulNetzClient.Data.Subject;
+import com.runtimeoverflow.SchulNetzClient.Data.User;
 import com.runtimeoverflow.SchulNetzClient.Parser;
 import com.runtimeoverflow.SchulNetzClient.R;
 import com.runtimeoverflow.SchulNetzClient.Utilities;
@@ -64,6 +66,8 @@ public class GradesFragment extends Fragment {
 			@Override
 			public void runAsync() {
 				if(Utilities.hasWifi()){
+					User copy = Variables.get().user.copy();
+					
 					Object result = Variables.get().account.loadPage("22326");
 					
 					if(result != null && result.getClass() == Document.class){
@@ -74,8 +78,12 @@ public class GradesFragment extends Fragment {
 					
 					if(result != null && result.getClass() == Document.class){
 						Parser.parseGrades((Document) result, Variables.get().user);
-						Variables.get().user.processConnections();
 					}
+					
+					Variables.get().user.processConnections();
+					
+					Change.publishNotifications(Change.getChanges(copy, Variables.get().user));
+					Variables.get().user.save();
 				}
 			}
 			

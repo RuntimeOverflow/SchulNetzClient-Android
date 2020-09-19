@@ -48,8 +48,15 @@ public class User {
 		Gson gson = new GsonBuilder().create();
 		String json = gson.toJson(this);
 		editor.putString("user", json);
-
-		editor.apply();
+		
+		editor.commit();
+	}
+	
+	public User copy(){
+		Gson gson = new GsonBuilder().create();
+		User copy = gson.fromJson(gson.toJson(this), User.class);
+		copy.processConnections();
+		return copy;
 	}
 	
 	public void processConnections(){

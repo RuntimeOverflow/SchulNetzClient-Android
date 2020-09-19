@@ -96,6 +96,7 @@ public class Utilities {
 		int id = prefs.getInt("notificationId", 0);
 		editor.putInt("notificationId", id + 1);
 		editor.apply();
+		editor.commit();
 		
 		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(Variables.get().currentContext);
 		notificationManager.notify(id, builder.build());

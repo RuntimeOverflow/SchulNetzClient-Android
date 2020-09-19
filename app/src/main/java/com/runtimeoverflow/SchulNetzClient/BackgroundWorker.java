@@ -31,6 +31,8 @@ public class BackgroundWorker extends Worker {
 	public Result doWork() {
 		if(Utilities.isInForeground(getApplicationContext())) return Result.retry();
 		
+		Variables.get().currentContext = getApplicationContext();
+		
 		SharedPreferences prefs = getApplicationContext().getSharedPreferences("com.runtimeoverflow.SchulNetzClient", Context.MODE_PRIVATE);
 		if(prefs == null || prefs.getString("host", "").length() <= 0 || prefs.getString("username", "").length() <= 0 || prefs.getString("password", "").length() <= 0) return Result.success();
 		
@@ -83,39 +85,7 @@ public class BackgroundWorker extends Worker {
 		ArrayList<Change<?>> changes = Change.getChanges(previous, user);
 		user.save();
 		
-		if(prefs.getBoolean("notificationsEnabled", true)) for(Change<?> change : changes){
-			Class<?> c = null;
-			
-			if(change.previous != null) c = change.previous.getClass();
-			else if(change.current != null) c = change.current.getClass();
-			else continue;
-			
-			if(c == Grade.class){
-				if((change.type == Change.ChangeType.ADDED && ((Grade)change.current).grade != 0) || (change.type == Change.ChangeType.MODIFIED && change.varName.equals("grade") && ((Grade)change.previous).grade == 0)){
-					Utilities.sendNotification(getApplicationContext().getString(R.string.newGrade), "[" + ((Grade)change.current).subject.name + "] " + ((Grade)change.current).content + ": " + Double.toString(((Grade)change.current).grade));
-				} else if(change.type == Change.ChangeType.MODIFIED && change.varName.equals("grade") && ((Grade)change.current).grade != 0){
-					Utilities.sendNotification(getApplicationContext().getString(R.string.modifiedGrade), "[" + ((Grade)change.current).subject.name + "] " + ((Grade)change.current).content + ": " + Double.toString(((Grade)change.previous).grade) + " -> " + Double.toString(((Grade)change.current).grade));
-				}
-			} else if(c == Absence.class){
-				if(change.type == Change.ChangeType.ADDED){
-					SimpleDateFormat sdf = new SimpleDateFormat("d.MM.yyyy");
-					
-					String body = sdf.format(((Absence)change.current).startDate.getTime()) + (((Absence)change.current).startDate.getTimeInMillis() != ((Absence)change.current).endDate.getTimeInMillis() ? " - " + sdf.format(((Absence)change.current).endDate.getTime()) : "");
-					body += " (" + Integer.toString(((Absence)change.current).lessonCount) + " " + (((Absence)change.current).lessonCount != 1 ? getApplicationContext().getString(R.string.lessons) : getApplicationContext().getString(R.string.lesson)) + ")";
-					Utilities.sendNotification(((Absence)change.current).excused ? getApplicationContext().getString(R.string.newExcusedAbsence) : getApplicationContext().getString(R.string.newAbsence), body);
-				} else if(change.type == Change.ChangeType.MODIFIED && change.varName.equals("excused") && ((Absence)change.current).excused){
-					SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-					
-					String body = sdf.format(((Absence)change.current).startDate.getTime()) + (((Absence)change.current).startDate.getTimeInMillis() != ((Absence)change.current).endDate.getTimeInMillis() ? " - " + sdf.format(((Absence)change.current).endDate.getTime()) : "");
-					body += " (" + Integer.toString(((Absence)change.current).lessonCount) + " " + (((Absence)change.current).lessonCount != 1 ? getApplicationContext().getString(R.string.lessons) : getApplicationContext().getString(R.string.lesson)) + ")";
-					Utilities.sendNotification(getApplicationContext().getString(R.string.excusedAbsence), body);
-				}
-			} else if(c == Transaction.class){
-				if(change.type == Change.ChangeType.ADDED){
-					Utilities.sendNotification(getApplicationContext().getString(R.string.newTransaction), ((Transaction)change.current).reason + " -> " + String.format("%.2f", ((Transaction)change.current).amount));
-				}
-			}
-		}
+		Change.publishNotifications(changes);
 		
 		return Result.success();
 	}

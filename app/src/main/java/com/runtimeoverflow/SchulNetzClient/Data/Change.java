@@ -1,7 +1,13 @@
 package com.runtimeoverflow.SchulNetzClient.Data;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.runtimeoverflow.SchulNetzClient.R;
+import com.runtimeoverflow.SchulNetzClient.Utilities;
+import com.runtimeoverflow.SchulNetzClient.Variables;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class Change<T> {
@@ -188,5 +194,41 @@ public class Change<T> {
 		}
 		
 		return changes;
+	}
+	
+	public static void publishNotifications(ArrayList<Change<?>> changes){
+		if(Variables.get().currentContext.getApplicationContext().getSharedPreferences("com.runtimeoverflow.SchulNetzClient", Context.MODE_PRIVATE).getBoolean("notificationsEnabled", true)) for(Change<?> change : changes){
+			Class<?> c = null;
+			
+			if(change.previous != null) c = change.previous.getClass();
+			else if(change.current != null) c = change.current.getClass();
+			else continue;
+			
+			if(c == Grade.class){
+				if((change.type == Change.ChangeType.ADDED && ((Grade)change.current).grade != 0) || (change.type == Change.ChangeType.MODIFIED && change.varName.equals("grade") && ((Grade)change.previous).grade == 0)){
+					Utilities.sendNotification(Variables.get().currentContext.getApplicationContext().getString(R.string.newGrade), "[" + ((Grade)change.current).subject.name + "] " + ((Grade)change.current).content + ": " + Double.toString(((Grade)change.current).grade));
+				} else if(change.type == Change.ChangeType.MODIFIED && change.varName.equals("grade") && ((Grade)change.current).grade != 0){
+					Utilities.sendNotification(Variables.get().currentContext.getApplicationContext().getString(R.string.modifiedGrade), "[" + ((Grade)change.current).subject.name + "] " + ((Grade)change.current).content + ": " + Double.toString(((Grade)change.previous).grade) + " -> " + Double.toString(((Grade)change.current).grade));
+				}
+			} else if(c == Absence.class){
+				if(change.type == Change.ChangeType.ADDED){
+					SimpleDateFormat sdf = new SimpleDateFormat("d.MM.yyyy");
+					
+					String body = sdf.format(((Absence)change.current).startDate.getTime()) + (((Absence)change.current).startDate.getTimeInMillis() != ((Absence)change.current).endDate.getTimeInMillis() ? " - " + sdf.format(((Absence)change.current).endDate.getTime()) : "");
+					body += " (" + Integer.toString(((Absence)change.current).lessonCount) + " " + (((Absence)change.current).lessonCount != 1 ? Variables.get().currentContext.getApplicationContext().getString(R.string.lessons) : Variables.get().currentContext.getApplicationContext().getString(R.string.lesson)) + ")";
+					Utilities.sendNotification(((Absence)change.current).excused ? Variables.get().currentContext.getApplicationContext().getString(R.string.newExcusedAbsence) : Variables.get().currentContext.getApplicationContext().getString(R.string.newAbsence), body);
+				} else if(change.type == Change.ChangeType.MODIFIED && change.varName.equals("excused") && ((Absence)change.current).excused){
+					SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+					
+					String body = sdf.format(((Absence)change.current).startDate.getTime()) + (((Absence)change.current).startDate.getTimeInMillis() != ((Absence)change.current).endDate.getTimeInMillis() ? " - " + sdf.format(((Absence)change.current).endDate.getTime()) : "");
+					body += " (" + Integer.toString(((Absence)change.current).lessonCount) + " " + (((Absence)change.current).lessonCount != 1 ? Variables.get().currentContext.getApplicationContext().getString(R.string.lessons) : Variables.get().currentContext.getApplicationContext().getString(R.string.lesson)) + ")";
+					Utilities.sendNotification(Variables.get().currentContext.getApplicationContext().getString(R.string.excusedAbsence), body);
+				}
+			} else if(c == Transaction.class){
+				if(change.type == Change.ChangeType.ADDED){
+					Utilities.sendNotification(Variables.get().currentContext.getApplicationContext().getString(R.string.newTransaction), ((Transaction)change.current).reason + " -> " + String.format("%.2f", ((Transaction)change.current).amount));
+				}
+			}
+		}
 	}
 }

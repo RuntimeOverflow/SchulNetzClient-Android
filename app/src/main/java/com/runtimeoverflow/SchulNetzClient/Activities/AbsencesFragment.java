@@ -20,7 +20,9 @@ import android.widget.TextView;
 
 import com.runtimeoverflow.SchulNetzClient.AsyncAction;
 import com.runtimeoverflow.SchulNetzClient.Data.Absence;
+import com.runtimeoverflow.SchulNetzClient.Data.Change;
 import com.runtimeoverflow.SchulNetzClient.Data.Subject;
+import com.runtimeoverflow.SchulNetzClient.Data.User;
 import com.runtimeoverflow.SchulNetzClient.Parser;
 import com.runtimeoverflow.SchulNetzClient.R;
 import com.runtimeoverflow.SchulNetzClient.Utilities;
@@ -55,8 +57,13 @@ public class AbsencesFragment extends Fragment {
 					Object result = Variables.get().account.loadPage("21111");
 					
 					if(result != null && result.getClass() == Document.class){
+						User copy = Variables.get().user.copy();
+						
 						Parser.parseAbsences((Document) result, Variables.get().user);
 						Variables.get().user.processConnections();
+						
+						Change.publishNotifications(Change.getChanges(copy, Variables.get().user));
+						Variables.get().user.save();
 					}
 				}
 			}

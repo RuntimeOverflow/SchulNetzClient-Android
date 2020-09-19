@@ -27,8 +27,10 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.runtimeoverflow.SchulNetzClient.AsyncAction;
+import com.runtimeoverflow.SchulNetzClient.Data.Change;
 import com.runtimeoverflow.SchulNetzClient.Data.Student;
 import com.runtimeoverflow.SchulNetzClient.Data.Teacher;
+import com.runtimeoverflow.SchulNetzClient.Data.User;
 import com.runtimeoverflow.SchulNetzClient.Parser;
 import com.runtimeoverflow.SchulNetzClient.R;
 import com.runtimeoverflow.SchulNetzClient.Utilities;
@@ -117,8 +119,13 @@ public class PeopleFragment extends Fragment {
 					result = Variables.get().account.loadPage("22326");
 					
 					if(result != null && result.getClass() == Document.class){
+						User copy = Variables.get().user.copy();
+						
 						Parser.parseStudents((Document) result, Variables.get().user);
 						Variables.get().user.processConnections();
+						
+						Change.publishNotifications(Change.getChanges(copy, Variables.get().user));
+						Variables.get().user.save();
 					}
 				}
 			}

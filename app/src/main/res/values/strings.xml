@@ -48,6 +48,7 @@
 	<string name="lesson">Lesson</string>
 	<string name="lessons">Lessons</string>
 	<string name="noLessons">No Lessons</string>
+	<string name="timetableUnavailable">Timetable Unavailable</string>
 	<string name="noAbsences">No Absences</string>
 	<string name="missedLessons">Lessons missed</string>
 	

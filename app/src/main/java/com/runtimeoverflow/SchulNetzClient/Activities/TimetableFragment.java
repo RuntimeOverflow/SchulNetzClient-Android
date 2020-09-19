@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.runtimeoverflow.SchulNetzClient.AsyncAction;
+import com.runtimeoverflow.SchulNetzClient.Data.Change;
 import com.runtimeoverflow.SchulNetzClient.Data.Lesson;
+import com.runtimeoverflow.SchulNetzClient.Data.User;
 import com.runtimeoverflow.SchulNetzClient.Parser;
 import com.runtimeoverflow.SchulNetzClient.R;
 import com.runtimeoverflow.SchulNetzClient.TimetableView;
@@ -102,7 +104,12 @@ public class TimetableFragment extends Fragment {
 				Object result = Variables.get().account.loadPage("22202");
 				
 				if(result != null && result.getClass() == Document.class){
+					User copy = Variables.get().user.copy();
+					
 					Parser.parseSchedulePage((Document) result, Variables.get().user);
+					
+					Change.publishNotifications(Change.getChanges(copy, Variables.get().user));
+					Variables.get().user.save();
 				}
 			}
 		});
@@ -134,7 +141,7 @@ public class TimetableFragment extends Fragment {
 		}
 		
 		Variables.get().timetableDate = Calendar.getInstance();
-		lessons = Variables.get().user.lessons;
+		lessons = null;
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("d.M.yyyy");
 		((TextView)getView().findViewById(R.id.dateLabel)).setText(sdf.format(Variables.get().timetableDate.getTime()));
@@ -148,7 +155,7 @@ public class TimetableFragment extends Fragment {
 		original.setTimeInMillis(Variables.get().timetableDate.getTimeInMillis());
 		
 		tt.setVisibility(View.GONE);
-		getView().findViewById(R.id.noLessonsLabel).setVisibility(View.GONE);
+		getView().findViewById(R.id.statusLabel).setVisibility(View.GONE);
 		getView().findViewById(R.id.loadingIcon).setVisibility(View.VISIBLE);
 		
 		Utilities.runAsynchronous(new AsyncAction() {
@@ -202,16 +209,23 @@ public class TimetableFragment extends Fragment {
 		ArrayList<Lesson.ScheduleLesson> sl = calculateLayout(lessons);
 		tt.setLessons(sl);
 		
-		if(sl.size() <= 0){
-			getView().findViewById(R.id.noLessonsLabel).setVisibility(View.VISIBLE);
+		if(lessons == null){
+			((TextView)getView().findViewById(R.id.statusLabel)).setText(R.string.timetableUnavailable);
+			getView().findViewById(R.id.statusLabel).setVisibility(View.VISIBLE);
+			tt.setVisibility(View.GONE);
+		} else if(sl.size() <= 0){
+			((TextView)getView().findViewById(R.id.statusLabel)).setText(R.string.noLessons);
+			getView().findViewById(R.id.statusLabel).setVisibility(View.VISIBLE);
 			tt.setVisibility(View.GONE);
 		} else{
-			getView().findViewById(R.id.noLessonsLabel).setVisibility(View.GONE);
+			getView().findViewById(R.id.statusLabel).setVisibility(View.GONE);
 			tt.setVisibility(View.VISIBLE);
 		}
 	}
 	
 	private ArrayList<Lesson.ScheduleLesson> calculateLayout(ArrayList<Lesson> lessons){
+		if(lessons == null) return new ArrayList<>();
+		
 		ArrayList<Lesson.ScheduleLesson> result = new ArrayList<>();
 		ArrayList<Lesson> sorted = Lesson.orderByStartTime(lessons);
 		
