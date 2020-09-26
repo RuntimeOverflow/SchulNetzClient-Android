@@ -6,7 +6,7 @@
 	<string name="signin">Sign in</string>
 	<string name="signout">Sign out</string>
 	<string name="signoutConfirmation">Are you sure?</string>
-	<string name="invalidCreds">Invalid username/password</string>
+	<string name="invalidCreds">Invalid username/password (This can also be caused if your school is unsupported)</string>
 	<string name="selectHost">Select host</string>
 	<string name="host">Host</string>
 	<string name="noConnection">No internet connection</string>

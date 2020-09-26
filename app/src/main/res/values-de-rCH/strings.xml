@@ -4,7 +4,7 @@
 	<string name="password">Passwort</string>
 	<string name="signin">Anmelden</string>
 	<string name="signout">Abmelden</string>
-	<string name="invalidCreds">Ungültiger Benutzername/Falsches Passwort</string>
+	<string name="invalidCreds">Ungültiger Benutzername/Falsches Passwort (Es kann auch sein, dass die Schule nicht unterstützt wird)</string>
 	<string name="selectHost">Mandant auswählen</string>
 	<string name="yes">Ja</string>
 	<string name="no">Nein</string>

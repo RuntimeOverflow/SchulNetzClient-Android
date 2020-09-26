@@ -30,9 +30,13 @@ import com.runtimeoverflow.SchulNetzClient.Variables;
 
 import org.jsoup.nodes.Document;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class GradesFragment extends Fragment {
 	private TableLayout gradeTable;
 	private int cellsPerRow = 2;
+	private ArrayList<Subject> current;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +57,8 @@ public class GradesFragment extends Fragment {
 			}
 		});
 		
+		current = Variables.get().user.subjects;
+		
 		reloadTable();
 	}
 	
@@ -67,23 +73,40 @@ public class GradesFragment extends Fragment {
 			public void runAsync() {
 				if(Utilities.hasWifi()){
 					User copy = Variables.get().user.copy();
+					copy.subjects = current;
+					
+					ArrayList<Subject> previous = Variables.get().user.subjects;
 					
 					Object result = Variables.get().account.loadPage("22326");
+					boolean success = false;
 					
 					if(result != null && result.getClass() == Document.class){
-						Parser.parseSubjects((Document) result, Variables.get().user);
+						success = Parser.parseSubjects((Document) result, Variables.get().user);
 					}
+					
+					if(!success){
+						Variables.get().user.subjects = previous;
+						Variables.get().user.processConnections();
+						return;
+					}
+					
+					Variables.get().user.processConnections();
 					
 					result = Variables.get().account.loadPage("21311");
 					
+					success = false;
 					if(result != null && result.getClass() == Document.class){
-						Parser.parseGrades((Document) result, Variables.get().user);
+						success = Parser.parseGrades((Document) result, Variables.get().user);
 					}
+					
+					if(!success) Variables.get().user.subjects = previous;
 					
 					Variables.get().user.processConnections();
 					
 					Change.publishNotifications(Change.getChanges(copy, Variables.get().user));
 					Variables.get().user.save();
+					
+					if(success) current = Variables.get().user.subjects;
 				}
 			}
 			
@@ -96,6 +119,8 @@ public class GradesFragment extends Fragment {
 	
 	public void reloadTable(){
 		if(getView() == null) return;
+		
+		current = Variables.get().user.subjects;
 		
 		gradeTable = getView().findViewById(R.id.gradeTable);
 		
@@ -111,7 +136,7 @@ public class GradesFragment extends Fragment {
 		int index = 0;
 		int absoluteIndex = 0;
 		TableRow row = null;
-		for(final Subject s : Variables.get().user.subjects){
+		for(final Subject s : current){
 			if(s.name == null) {
 				absoluteIndex++;
 				continue;
