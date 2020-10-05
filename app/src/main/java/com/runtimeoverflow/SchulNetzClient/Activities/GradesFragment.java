@@ -36,7 +36,7 @@ import java.util.ArrayList;
 public class GradesFragment extends Fragment {
 	private TableLayout gradeTable;
 	private int cellsPerRow = 2;
-	private ArrayList<Subject> current;
+	private ArrayList<Subject> current = new ArrayList<>();
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

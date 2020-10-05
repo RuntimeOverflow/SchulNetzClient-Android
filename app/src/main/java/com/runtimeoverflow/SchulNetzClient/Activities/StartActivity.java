@@ -38,7 +38,7 @@ public class StartActivity extends AppCompatActivity {
 		Variables.get().currentContext = this;
 		
 		SharedPreferences prefs = this.getSharedPreferences("com.runtimeoverflow.SchulNetzClient", Context.MODE_PRIVATE);
-		if(prefs != null && prefs.getString("host", null) != null && prefs.getString("host", "").length() > 0 && prefs.getString("username", null) != null && prefs.getString("username", null).length() > 0 && prefs.getString("password", null) != null && prefs.getString("password", null).length() > 0){
+		if(prefs != null && prefs.getString("host", null) != null && prefs.getString("host", "").length() > 0 && prefs.getString("username", null) != null && prefs.getString("username", null).length() > 0 && prefs.getString("password", null) != null && prefs.getString("password", null).length() > 0 && User.load() != null){
 			Variables.get().account = new Account(prefs.getString("host", null), prefs.getString("username", null), prefs.getString("password", null));
 			Variables.get().user = User.load();
 			
