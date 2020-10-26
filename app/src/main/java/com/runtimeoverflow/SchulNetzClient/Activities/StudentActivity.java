@@ -47,7 +47,7 @@ public class StudentActivity extends AppCompatActivity {
 		
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
-		if(Variables.get().activityParameter.getClass() == Student.class){
+		if(Variables.get().activityParameter != null && Variables.get().activityParameter.getClass() == Student.class){
 			currentStudent = (Student)Variables.get().activityParameter;
 			Variables.get().activityParameter = null;
 		} else {

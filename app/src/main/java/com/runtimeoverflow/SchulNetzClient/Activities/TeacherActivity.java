@@ -36,7 +36,7 @@ public class TeacherActivity extends AppCompatActivity {
     
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     
-        if(Variables.get().activityParameter.getClass() == Teacher.class){
+        if(Variables.get().activityParameter != null && Variables.get().activityParameter.getClass() == Teacher.class){
             currentTeacher = (Teacher)Variables.get().activityParameter;
             Variables.get().activityParameter = null;
         } else {

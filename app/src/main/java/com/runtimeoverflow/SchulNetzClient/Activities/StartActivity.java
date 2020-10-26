@@ -37,10 +37,11 @@ public class StartActivity extends AppCompatActivity {
 		
 		Variables.get().currentContext = this;
 		
-		SharedPreferences prefs = this.getSharedPreferences("com.runtimeoverflow.SchulNetzClient", Context.MODE_PRIVATE);
-		if(prefs != null && prefs.getString("host", null) != null && prefs.getString("host", "").length() > 0 && prefs.getString("username", null) != null && prefs.getString("username", null).length() > 0 && prefs.getString("password", null) != null && prefs.getString("password", null).length() > 0 && User.load() != null){
-			Variables.get().account = new Account(prefs.getString("host", null), prefs.getString("username", null), prefs.getString("password", null));
-			Variables.get().user = User.load();
+		SharedPreferences prefs = getSharedPreferences("com.runtimeoverflow.SchulNetzClient", Context.MODE_PRIVATE);
+		User user = User.load();
+		if(prefs != null && prefs.getString("host", null) != null && prefs.getString("host", "").length() > 0 && prefs.getString("username", null) != null && prefs.getString("username", "").length() > 0 && prefs.getString("password", null) != null && prefs.getString("password", "").length() > 0 && user != null){
+			Variables.get().account = new Account(prefs.getString("host", ""), prefs.getString("username", ""), prefs.getString("password", ""));
+			Variables.get().user = user;
 			
 			startActivity(new Intent(this, MainActivity.class));
 		} else {

@@ -54,4 +54,23 @@
 	<string name="noLessons">Keine Lektionen</string>
 	<string name="copied">Kopiert!</string>
 	<string name="timetableUnavailable">Stundenplan nicht verfügbar</string>
+	<string name="gradeSettings">Noteneinstellungen</string>
+	<string name="doubleNegativePoints">Doppelte Minuspunkte</string>
+	<string name="gradeGroup">Fächergruppe</string>
+	<string name="gradeGroups">Fächergruppen</string>
+	<string name="unvaluedGrade">Nicht zählendes Fach</string>
+	<string name="unvaluedGrades">Nicht zählende Fächer</string>
+	<string name="unvaluedGradesExplanation">Ausgewählte Fächer zählen nicht als Plus-/Minuspunkte. (Nur Fächer, welche nicht Teil einer Fächergruppe sind, können ausgewählt werden)</string>
+	<string name="gradeGroupsExplanation">Gruppen werden die Noten mehrerer Fächer als eine Note zählen. (Zum Beispiel: Wenn Musik und Gestalten als eine Note zählen, aber separate Fächer sind)</string>
+	<string name="createGradeGroup">Fächergruppe hinzufügen</string>
+	<string name="editGradeGroup">Fächergruppe bearbeiten</string>
+	<string name="roundOptionUnvalued">Nicht zählen</string>
+	<string name="roundOptionAverage">Durchschnitt nehmen</string>
+	<string name="roundOptionRoundedAverage">Alle Noten auf 0.5 runden und den Durchschnitt nehmen</string>
+	<string name="subjectGroupName">Gruppenname</string>
+	<string name="roundOption">Notenberechnung</string>
+	<string name="subjectGroupDelete">Gruppe löschen</string>
+	<string name="subjectGroupAdd">Hinzufügen</string>
+	<string name="subjectGroupRemove">Entfernen</string>
+	<string name="newGroup">Neue Gruppe</string>
 </resources>

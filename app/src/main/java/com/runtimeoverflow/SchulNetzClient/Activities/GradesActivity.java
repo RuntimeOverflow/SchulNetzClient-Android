@@ -34,7 +34,7 @@ public class GradesActivity extends AppCompatActivity {
 		
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
-		if(Variables.get().activityParameter.getClass() == Subject.class){
+		if(Variables.get().activityParameter != null && Variables.get().activityParameter.getClass() == Subject.class){
 			currentSubject = (Subject) Variables.get().activityParameter;
 			Variables.get().activityParameter = null;
 		} else {

@@ -1,6 +1,8 @@
 package com.runtimeoverflow.SchulNetzClient.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
@@ -22,6 +24,7 @@ import com.runtimeoverflow.SchulNetzClient.AsyncAction;
 import com.runtimeoverflow.SchulNetzClient.Data.Change;
 import com.runtimeoverflow.SchulNetzClient.Data.Grade;
 import com.runtimeoverflow.SchulNetzClient.Data.Subject;
+import com.runtimeoverflow.SchulNetzClient.Data.SubjectGroup;
 import com.runtimeoverflow.SchulNetzClient.Data.User;
 import com.runtimeoverflow.SchulNetzClient.Parser;
 import com.runtimeoverflow.SchulNetzClient.R;
@@ -120,6 +123,7 @@ public class GradesFragment extends Fragment {
 	public void reloadTable(){
 		if(getView() == null) return;
 		
+		final SharedPreferences prefs = getContext().getSharedPreferences("com.runtimeoverflow.SchulNetzClient", Context.MODE_PRIVATE);
 		current = Variables.get().user.subjects;
 		
 		gradeTable = getView().findViewById(R.id.gradeTable);
@@ -142,9 +146,9 @@ public class GradesFragment extends Fragment {
 				continue;
 			}
 			
-			if(!Double.isNaN(s.getAverage())){
+			if(!Double.isNaN(s.getAverage()) && !s.unvalued && s.group == null){
 				if(Math.round(s.getAverage() * 2.0) / 2.0 - 4.0 > 0) positive += Math.round(s.getAverage() * 2.0) / 2.0 - 4.0;
-				else negative = Math.round(s.getAverage() * 2.0) / 2.0 - 4.0;
+				else negative += Math.round(s.getAverage() * 2.0) / 2.0 - 4.0;
 			}
 			
 			if(index % cellsPerRow == 0){
@@ -177,9 +181,17 @@ public class GradesFragment extends Fragment {
 			index++;
 		}
 		
-		((TextView)getView().findViewById(R.id.negativeLabel)).setText((negative == 0 ? "-" : "") + Double.toString(Utilities.roundToDecimalPlaces(negative, 3)));
+		for(SubjectGroup g : Variables.get().user.subjectGroups){
+			double grade = g.getGrade();
+			if(!Double.isNaN(grade) && grade >= 1){
+				if(Math.round(grade * 2.0) / 2.0 - 4.0 > 0) positive += Math.round(grade * 2.0) / 2.0 - 4.0;
+				else negative += Math.round(grade * 2.0) / 2.0 - 4.0;
+			}
+		}
+		
+		((TextView)getView().findViewById(R.id.negativeLabel)).setText((negative == 0 ? "-" : "") + Double.toString(Utilities.roundToDecimalPlaces((prefs.getBoolean("doubleNegativePointsEnabled", true) ? 2 : 1) * negative, 3)));
 		((TextView)getView().findViewById(R.id.positiveLabel)).setText("+" + Double.toString(Utilities.roundToDecimalPlaces(positive, 3)));
 		
-		((TextView)getView().findViewById(R.id.differenceLabel)).setText(Double.toString(Utilities.roundToDecimalPlaces(positive + 2 * negative, 3)));
+		((TextView)getView().findViewById(R.id.differenceLabel)).setText(Double.toString(Utilities.roundToDecimalPlaces(positive + (prefs.getBoolean("doubleNegativePointsEnabled", true) ? 2 : 1) * negative, 3)));
 	}
 }

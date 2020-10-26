@@ -52,7 +52,7 @@
 	<string name="noAbsences">No Absences</string>
 	<string name="missedLessons">Lessons missed</string>
 	
-	<string name="accountBalance">Account balance</string>
+	<string name="accountBalance">Account Balance</string>
 	<string name="balance">Balance</string>
 	
 	<string name="newGrade">New grade published</string>
@@ -68,6 +68,29 @@
 	
 	<string name="defaultPage">Start Page</string>
 	<string name="notifications">Notifications</string>
+	<string name="gradeSettings">Grade Settings</string>
 	<string name="source" translatable="false">Source Code [Github]</string>
 	<string name="credits" translatable="false">Created by\nRuntimeOverflow</string>
+	
+	<string name="doubleNegativePoints">Double Negative Points</string>
+	<string name="unvaluedGrade">Not Counting Subject</string>
+	<string name="unvaluedGrades">Not Counting Subjects</string>
+	<string name="gradeGroup">Subject Group</string>
+	<string name="gradeGroups">Subject Groups</string>
+	
+	<string name="unvaluedGradesExplanation">Selected subjects won\'t count as plus/minus points. (Only subjects not included in a group can be selected)</string>
+	
+	<string name="gradeGroupsExplanation">Created groups will combine grades of multiple subjects and count them as a single subject. (For example: If Music and Art together count as one grade together, even though they\'re 2 separate subjects)</string>
+	<string name="createGradeGroup">Create Subject Group</string>
+	<string name="editGradeGroup">Edit Subject Group</string>
+	<string name="newGroup">New Group</string>
+	
+	<string name="subjectGroupName">Group Name</string>
+	<string name="roundOption">Grade Calculation</string>
+	<string name="roundOptionUnvalued">Don\'t Count</string>
+	<string name="roundOptionAverage">Take Average</string>
+	<string name="roundOptionRoundedAverage">Round Grades to 0.5 and Take Average</string>
+	<string name="subjectGroupDelete">Delete Group</string>
+	<string name="subjectGroupAdd">Add</string>
+	<string name="subjectGroupRemove">Remove</string>
 </resources>

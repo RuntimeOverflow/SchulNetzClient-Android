@@ -9,6 +9,7 @@ import java.util.Objects;
 public class Subject {
 	public transient Teacher teacher;
 	public transient ArrayList<Lesson> lessons = new ArrayList<>();
+	public transient SubjectGroup group = null;
 
 	public ArrayList<Grade> grades = new ArrayList<>();
 	public String identifier;
@@ -16,6 +17,7 @@ public class Subject {
 	public String shortName;
 	public boolean confirmed;
 	public boolean hiddenGrades;
+	public boolean unvalued = false;
 
 	public double getAverage(){
 		double total = 0;

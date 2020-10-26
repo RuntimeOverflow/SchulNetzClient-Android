@@ -34,7 +34,7 @@ public class BackgroundWorker extends Worker {
 		Variables.get().currentContext = getApplicationContext();
 		
 		SharedPreferences prefs = getApplicationContext().getSharedPreferences("com.runtimeoverflow.SchulNetzClient", Context.MODE_PRIVATE);
-		if(prefs == null || prefs.getString("host", "").length() <= 0 || prefs.getString("username", "").length() <= 0 || prefs.getString("password", "").length() <= 0) return Result.success();
+		if(prefs == null || prefs.getString("host", "").length() <= 0 || prefs.getString("username", "").length() <= 0 || prefs.getString("password", "").length() <= 0 || User.load() ==  null) return Result.success();
 		
 		User previous = User.load();
 		User user = new User();

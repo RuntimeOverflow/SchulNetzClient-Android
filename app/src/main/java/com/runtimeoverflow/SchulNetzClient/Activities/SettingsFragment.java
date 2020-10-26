@@ -15,6 +15,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
@@ -80,6 +81,13 @@ public class SettingsFragment extends Fragment {
 			}
 		});
 		
+		getView().findViewById(R.id.gradesSettingsButton).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				startActivity(new Intent(getContext(), GradeSettingsActivity.class));
+			}
+		});
+		
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, new String[]{getString(R.string.grades), getString(R.string.absences), getString(R.string.timetable), getString(R.string.people), getString(R.string.settings)});
 		((Spinner)getView().findViewById(R.id.startPageSelector)).setAdapter(adapter);
 		
@@ -87,7 +95,6 @@ public class SettingsFragment extends Fragment {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 				editor.putInt("defaultPage", resIds[adapterView.getSelectedItemPosition()]);
-				editor.apply();
 				editor.commit();
 			}
 			
@@ -95,11 +102,10 @@ public class SettingsFragment extends Fragment {
 			public void onNothingSelected(AdapterView<?> adapterView) {}
 		});
 		
-		((Switch)getView().findViewById(R.id.notificationsSwitch)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+		((SwitchCompat)getView().findViewById(R.id.notificationsSwitch)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-				editor.putBoolean("notificationsEnabled", compoundButton.isChecked());
-				editor.apply();
+				editor.putBoolean("notificationsEnabled", b);
 				editor.commit();
 			}
 		});
@@ -151,7 +157,7 @@ public class SettingsFragment extends Fragment {
 		final SharedPreferences prefs = getContext().getSharedPreferences("com.runtimeoverflow.SchulNetzClient", Context.MODE_PRIVATE);
 		
 		if(Variables.get().user.self != null){
-			((TextView)getView().findViewById(R.id.nameLabel)).setText(Variables.get().user.self.firstName + " " + Variables.get().user.self.lastName);
+			((TextView)getView().findViewById(R.id.nameLabel)).setText(String.format("%s %s", Variables.get().user.self.firstName, Variables.get().user.self.lastName));
 			((TextView)getView().findViewById(R.id.classLabel)).setText(Variables.get().user.self.className);
 		} else{
 			((TextView)getView().findViewById(R.id.nameLabel)).setText(Variables.get().account.username.replace(".", " ").toUpperCase());
@@ -165,7 +171,7 @@ public class SettingsFragment extends Fragment {
 			break;
 		}
 		
-		((Switch)getView().findViewById(R.id.notificationsSwitch)).setChecked(prefs.getBoolean("notificationsEnabled", true));
+		((SwitchCompat)getView().findViewById(R.id.notificationsSwitch)).setChecked(prefs.getBoolean("notificationsEnabled", true));
 	}
 	
 	private void onSignOutPressed(){

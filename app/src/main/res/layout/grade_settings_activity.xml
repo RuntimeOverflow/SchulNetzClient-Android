@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	tools:context=".Activities.GradeSettingsActivity">
+	
+	<Space
+		android:layout_width="match_parent"
+		android:layout_height="48dp" />
+	
+	<View
+		android:id="@+id/divider3"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:background="?android:attr/listDivider" />
+	
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+		
+		<TextView
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="10dp"
+			android:layout_marginTop="10dp"
+			android:layout_marginBottom="10dp"
+			android:text="@string/doubleNegativePoints"
+			android:textColor="#000000"
+			android:textSize="18sp"
+			android:textStyle="bold"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/doubleNegativePointsSwitch"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+		
+		<androidx.appcompat.widget.SwitchCompat
+			android:id="@+id/doubleNegativePointsSwitch"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="10dp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+	</androidx.constraintlayout.widget.ConstraintLayout>
+	
+	<View
+		android:id="@+id/divider4"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:background="?android:attr/listDivider" />
+	
+	<Space
+		android:layout_width="match_parent"
+		android:layout_height="48dp" />
+	
+	<View
+		android:id="@+id/divider5"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:background="?android:attr/listDivider" />
+	
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+		
+		<Button
+			android:id="@+id/unvaluedGradesButton"
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:text="@string/unvaluedGrades"
+			android:textAlignment="textStart"
+			android:textAllCaps="false"
+			android:textSize="18sp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+		
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="8dp"
+			android:contentDescription="@string/rightArrowDesc"
+			android:src="@drawable/ic_submenu"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+	
+	</androidx.constraintlayout.widget.ConstraintLayout>
+	
+	<View
+		android:id="@+id/divider6"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:background="?android:attr/listDivider" />
+	
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+		
+		<Button
+			android:id="@+id/gradeGroupsButton"
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:text="@string/gradeGroups"
+			android:textAlignment="textStart"
+			android:textAllCaps="false"
+			android:textSize="18sp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+		
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="8dp"
+			android:contentDescription="@string/rightArrowDesc"
+			android:src="@drawable/ic_submenu"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+	
+	</androidx.constraintlayout.widget.ConstraintLayout>
+	
+	<View
+		android:id="@+id/divider8"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:background="?android:attr/listDivider" />
+
+</LinearLayout>

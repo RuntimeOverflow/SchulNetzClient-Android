@@ -17,6 +17,7 @@ import com.runtimeoverflow.SchulNetzClient.Data.Lesson;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class TimetableView extends View {
 	private ArrayList<Lesson.ScheduleLesson> lessons = new ArrayList<>();
@@ -89,23 +90,35 @@ public class TimetableView extends View {
 		
 		double heightPerMinute = (getHeight() - topOffset - bottomOffset) / (double)(maxHour - minHour) / 60.0;
 		
+		Calendar today = Calendar.getInstance();
+		if(lessons.size() > 0) today.setTimeInMillis(lessons.get(0).start.getTimeInMillis());
+		today.set(Calendar.MINUTE, 0);
+		today.set(Calendar.HOUR, 0);
+		today.set(Calendar.AM_PM, Calendar.AM);
+		today.set(Calendar.HOUR_OF_DAY, 0);
+		
+		text.setColor(Color.RED);
+		if((Calendar.getInstance().get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) && Calendar.getInstance().get(Calendar.YEAR) == today.get(Calendar.YEAR)) && Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= minHour && (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) < maxHour || (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) == maxHour && Calendar.getInstance().get(Calendar.MINUTE) == 0))){
+			canvas.drawLine(0, (float)(((Calendar.getInstance().get(Calendar.HOUR_OF_DAY) - minHour) * 60 + Calendar.getInstance().get(Calendar.MINUTE)) * heightPerMinute + topOffset - 1), (float)getWidth(), (float)(((Calendar.getInstance().get(Calendar.HOUR_OF_DAY) - minHour) * 60 + Calendar.getInstance().get(Calendar.MINUTE)) * heightPerMinute + topOffset), text);
+		}
+		
 		text.setColor(Color.LTGRAY);
 		for(int i = minHour; i <= maxHour; i++){
-			canvas.drawText(String.format("%02d", i) + ":00", 0, (float)((i - minHour) * 60 * heightPerMinute + timeBounds.height() / 2 + topOffset), text);
+			canvas.drawText(String.format(Locale.ENGLISH, "%02d", i) + ":00", 0, (float)((i - minHour) * 60 * heightPerMinute + timeBounds.height() / 2 + topOffset), text);
 			canvas.drawLine((float)leftOffset - 8 * getResources().getDisplayMetrics().density, (float)((i - minHour) * 60 * heightPerMinute + topOffset - 1), (float)getWidth(), (float)((i - minHour) * 60 * heightPerMinute + topOffset - 1), text);
 		}
 		
-		Calendar c = Calendar.getInstance();
-		if(lessons.size() > 0) c.setTimeInMillis(lessons.get(0).start.getTimeInMillis());
-		c.add(Calendar.DAY_OF_YEAR, 1);
-		c.set(Calendar.MINUTE, 0);
-		c.set(Calendar.HOUR, 0);
-		c.set(Calendar.AM_PM, Calendar.AM);
-		c.set(Calendar.HOUR_OF_DAY, 0);
+		Calendar tomorrow = Calendar.getInstance();
+		if(lessons.size() > 0) tomorrow.setTimeInMillis(lessons.get(0).start.getTimeInMillis());
+		tomorrow.add(Calendar.DAY_OF_YEAR, 1);
+		tomorrow.set(Calendar.MINUTE, 0);
+		tomorrow.set(Calendar.HOUR, 0);
+		tomorrow.set(Calendar.AM_PM, Calendar.AM);
+		tomorrow.set(Calendar.HOUR_OF_DAY, 0);
 		
 		Rect stringBounds = new Rect();
 		for(Lesson.ScheduleLesson l : lessons){
-			if(l.start.after(c)) continue;
+			if(l.start.after(tomorrow)) continue;
 			
 			fill.setColor(l.lesson.color);
 			stroke.setColor(ColorUtils.blendARGB(l.lesson.color, Color.BLACK, 0.2f));
@@ -113,7 +126,7 @@ public class TimetableView extends View {
 			
 			double y = (double)l.start.get(Calendar.MINUTE) + (l.start.get(Calendar.HOUR_OF_DAY) - minHour) * 60.0;
 			double height = (double)l.end.get(Calendar.MINUTE) + (l.end.get(Calendar.HOUR_OF_DAY) - minHour) * 60.0;
-			if(l.end.compareTo(c) == 0) height = (maxHour - minHour) * 60 * 60;
+			if(l.end.compareTo(tomorrow) == 0) height = (maxHour - minHour) * 60 * 60;
 			double width = (getWidth() - leftOffset) / (float)l.total;
 			double x = l.index * width;
 			

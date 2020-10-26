@@ -120,6 +120,11 @@ public class Parser {
 			user.subjects = previous;
 			return false;
 		}
+		
+		for(Subject prev : previous){
+			Subject s = user.subjectForIdentifier(prev.identifier);
+			if(s != null) s.unvalued = prev.unvalued;
+		}
 
 		return true;
 	}

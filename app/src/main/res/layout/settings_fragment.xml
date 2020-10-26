@@ -183,7 +183,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
         
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/notificationsSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -197,8 +197,54 @@
 				android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="?android:attr/listDivider" />
+	
+			<Space
+				android:layout_width="match_parent"
+				android:layout_height="48dp" />
+	
+			<View
+				android:id="@+id/divider"
+				android:layout_width="match_parent"
+				android:layout_height="1dp"
+				android:background="?android:attr/listDivider" />
+	
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+				
+				<Button
+					android:id="@+id/gradesSettingsButton"
+					style="@style/Widget.AppCompat.Button.Borderless"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:text="@string/gradeSettings"
+					android:textAlignment="textStart"
+					android:textAllCaps="false"
+					android:textSize="18sp"
+					app:layout_constraintBottom_toBottomOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent" />
+		
+				<ImageView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="8dp"
+					android:contentDescription="@string/rightArrowDesc"
+					android:src="@drawable/ic_submenu"
+					app:layout_constraintBottom_toBottomOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintTop_toTopOf="parent" />
+	
+			</androidx.constraintlayout.widget.ConstraintLayout>
+	
+			<View
+				android:id="@+id/divider2"
+				android:layout_width="match_parent"
+				android:layout_height="1dp"
+				android:background="?android:attr/listDivider" />
 
-        </LinearLayout>
+		</LinearLayout>
         
         <Space
             android:layout_width="0dp"
