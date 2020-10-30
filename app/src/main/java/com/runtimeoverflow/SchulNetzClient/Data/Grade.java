@@ -43,7 +43,7 @@ public class Grade {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Grade grade = (Grade) o;
-		return Objects.equals(content, grade.content);
+		return Objects.equals(content, grade.content) && date.getTimeInMillis() == grade.date.getTimeInMillis();
 	}
 	
 	@Override
