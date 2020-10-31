@@ -190,7 +190,6 @@ public class SettingsFragment extends Fragment {
 				editor.remove("password");
 				editor.remove("user");
 				
-				editor.apply();
 				editor.commit();
 				
 				startActivity(new Intent(getContext(), StartActivity.class));

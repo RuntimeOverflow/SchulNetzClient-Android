@@ -1,6 +1,7 @@
 package com.runtimeoverflow.SchulNetzClient.Activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,7 +23,17 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		context = this;
-
+		
+		Variables.get().currentContext = this;
+		if(Variables.get().user == null){
+			Variables.get().user = User.load();
+			
+			if(Variables.get().user == null){
+				startActivity(new Intent(Variables.get().currentContext, StartActivity.class));
+				return;
+			}
+		}
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
 		BottomNavigationView navView = findViewById(R.id.nav_view);
