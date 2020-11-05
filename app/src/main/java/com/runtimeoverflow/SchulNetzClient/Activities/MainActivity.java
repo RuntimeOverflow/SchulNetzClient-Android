@@ -34,6 +34,16 @@ public class MainActivity extends AppCompatActivity {
 			}
 		}
 		
+		if(Variables.get().account == null){
+			SharedPreferences prefs = getSharedPreferences("com.runtimeoverflow.SchulNetzClient", Context.MODE_PRIVATE);
+			Variables.get().account = Variables.get().account = new Account(prefs.getString("host", ""), prefs.getString("username", ""), prefs.getString("password", ""));;
+			
+			if(Variables.get().account == null){
+				startActivity(new Intent(Variables.get().currentContext, StartActivity.class));
+				return;
+			}
+		}
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
 		BottomNavigationView navView = findViewById(R.id.nav_view);
