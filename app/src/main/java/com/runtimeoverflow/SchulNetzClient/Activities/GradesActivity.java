@@ -3,6 +3,7 @@ package com.runtimeoverflow.SchulNetzClient.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.runtimeoverflow.SchulNetzClient.Data.Grade;
 import com.runtimeoverflow.SchulNetzClient.Data.Student;
 import com.runtimeoverflow.SchulNetzClient.Data.Subject;
+import com.runtimeoverflow.SchulNetzClient.Data.User;
 import com.runtimeoverflow.SchulNetzClient.R;
 import com.runtimeoverflow.SchulNetzClient.Utilities;
 import com.runtimeoverflow.SchulNetzClient.Variables;
@@ -33,6 +35,16 @@ public class GradesActivity extends AppCompatActivity {
 		setContentView(R.layout.grades_activity);
 		
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		Variables.get().currentContext = this;
+		if(Variables.get().user == null){
+			Variables.get().user = User.load();
+			
+			if(Variables.get().user == null){
+				startActivity(new Intent(Variables.get().currentContext, StartActivity.class));
+				return;
+			}
+		}
 		
 		if(Variables.get().activityParameter != null && Variables.get().activityParameter.getClass() == Subject.class){
 			currentSubject = (Subject) Variables.get().activityParameter;

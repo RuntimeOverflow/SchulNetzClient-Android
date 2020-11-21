@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.runtimeoverflow.SchulNetzClient.Data.Student;
+import com.runtimeoverflow.SchulNetzClient.Data.User;
 import com.runtimeoverflow.SchulNetzClient.R;
 import com.runtimeoverflow.SchulNetzClient.Variables;
 
@@ -46,6 +47,16 @@ public class StudentActivity extends AppCompatActivity {
 		setContentView(R.layout.student_activity);
 		
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		Variables.get().currentContext = this;
+		if(Variables.get().user == null){
+			Variables.get().user = User.load();
+			
+			if(Variables.get().user == null){
+				startActivity(new Intent(Variables.get().currentContext, StartActivity.class));
+				return;
+			}
+		}
 		
 		if(Variables.get().activityParameter != null && Variables.get().activityParameter.getClass() == Student.class){
 			currentStudent = (Student)Variables.get().activityParameter;

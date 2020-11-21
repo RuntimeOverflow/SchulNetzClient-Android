@@ -13,7 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 
+import com.runtimeoverflow.SchulNetzClient.Data.User;
 import com.runtimeoverflow.SchulNetzClient.R;
+import com.runtimeoverflow.SchulNetzClient.Variables;
 
 public class GradeSettingsActivity extends AppCompatActivity {
     
@@ -24,6 +26,16 @@ public class GradeSettingsActivity extends AppCompatActivity {
     
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.gradeSettings));
+    
+        Variables.get().currentContext = this;
+        if(Variables.get().user == null){
+            Variables.get().user = User.load();
+        
+            if(Variables.get().user == null){
+                startActivity(new Intent(Variables.get().currentContext, StartActivity.class));
+                return;
+            }
+        }
         
         final Context context = this;
         final SharedPreferences prefs = getSharedPreferences("com.runtimeoverflow.SchulNetzClient", Context.MODE_PRIVATE);

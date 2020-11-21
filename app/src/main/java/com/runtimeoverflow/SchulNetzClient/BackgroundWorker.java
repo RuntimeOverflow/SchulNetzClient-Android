@@ -37,7 +37,7 @@ public class BackgroundWorker extends Worker {
 		if(prefs == null || prefs.getString("host", "").length() <= 0 || prefs.getString("username", "").length() <= 0 || prefs.getString("password", "").length() <= 0 || User.load() ==  null) return Result.success();
 		
 		User previous = User.load();
-		User user = new User();
+		User user = previous.copy();
 		Account account = new Account(prefs.getString("host", null), prefs.getString("username", null), prefs.getString("password", null), false);
 		
 		Object res = account.signIn();
@@ -45,36 +45,23 @@ public class BackgroundWorker extends Worker {
 		
 		Object doc = account.loadPage("22352");
 		if(doc != null && doc.getClass() == Document.class) Parser.parseTeachers((Document)doc, user);
-		else user.teachers = previous.teachers;
+		
 		doc = account.loadPage("22326");
 		if(doc != null && doc.getClass() == Document.class) Parser.parseSubjects((Document)doc, user);
-		else user.subjects = previous.subjects;
 		if(doc != null && doc.getClass() == Document.class) Parser.parseStudents((Document)doc, user);
-		else user.students = previous.students;
+		
 		doc = account.loadPage("21311");
 		if(doc != null && doc.getClass() == Document.class) Parser.parseGrades((Document)doc, user);
-		else user.subjects = previous.subjects;
+		
 		doc = account.loadPage("21411");
 		if(doc != null && doc.getClass() == Document.class) Parser.parseSelf((Document)doc, user);
-		else{
-			for(Student s : user.students){
-				if(s.firstName.toLowerCase().equals(previous.self.firstName.toLowerCase()) && s.lastName.toLowerCase().equals(previous.self.lastName.toLowerCase())){
-					s.self = true;
-					break;
-				}
-			}
-		}
 		if(doc != null && doc.getClass() == Document.class) Parser.parseTransactions((Document)doc, user);
-		else user.transactions = previous.transactions;
+		
 		doc = account.loadPage("21111");
 		if(doc != null && doc.getClass() == Document.class) Parser.parseAbsences((Document)doc, user);
-		else user.absences = previous.absences;
+		
 		doc = account.loadPage("22202");
 		if(doc != null && doc.getClass() == Document.class) Parser.parseSchedulePage((Document)doc, user);
-		else{
-			user.lessonTypeMap = previous.lessonTypeMap;
-			user.roomMap = previous.roomMap;
-		}
 		
 		doc = account.loadSchedule(Calendar.getInstance(), Calendar.getInstance());
 		if(doc != null && doc.getClass() == Document.class) user.lessons = Parser.parseSchedule((Document)doc);

@@ -33,7 +33,7 @@
 	<string name="accountBalance">Kontoauszug</string>
 	<string name="signoutConfirmation">Wirklich abmelden?</string>
 	<string name="host">Mandant</string>
-	<string name="other">Anderer Mandant...</string>
+	<string name="other">Anderer Mandant…</string>
 	<string name="age">Jahre alt</string>
 	<string name="noDesc">Keine Beschreibung verfügbar</string>
 	<string name="showReports">Gefehlte Fächer anzeigen</string>

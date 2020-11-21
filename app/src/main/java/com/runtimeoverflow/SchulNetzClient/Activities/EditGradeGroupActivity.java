@@ -40,6 +40,16 @@ public class EditGradeGroupActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.editGradeGroup));
     
+        Variables.get().currentContext = this;
+        if(Variables.get().user == null){
+            Variables.get().user = User.load();
+        
+            if(Variables.get().user == null){
+                startActivity(new Intent(Variables.get().currentContext, StartActivity.class));
+                return;
+            }
+        }
+        
         if(Variables.get().activityParameter != null && Variables.get().activityParameter.getClass() == SubjectGroup.class){
             currentGroup = (SubjectGroup) Variables.get().activityParameter;
             Variables.get().activityParameter = null;

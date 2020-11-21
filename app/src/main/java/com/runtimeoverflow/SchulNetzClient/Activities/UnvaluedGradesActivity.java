@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.runtimeoverflow.SchulNetzClient.Data.Subject;
+import com.runtimeoverflow.SchulNetzClient.Data.User;
 import com.runtimeoverflow.SchulNetzClient.R;
 import com.runtimeoverflow.SchulNetzClient.Variables;
 
@@ -28,6 +30,16 @@ public class UnvaluedGradesActivity extends AppCompatActivity {
     
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.unvaluedGrades));
+    
+        Variables.get().currentContext = this;
+        if(Variables.get().user == null){
+            Variables.get().user = User.load();
+        
+            if(Variables.get().user == null){
+                startActivity(new Intent(Variables.get().currentContext, StartActivity.class));
+                return;
+            }
+        }
         
         for(final Subject s : Variables.get().user.subjects){
             if(s.group != null) continue;

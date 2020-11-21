@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.runtimeoverflow.SchulNetzClient.Data.Subject;
 import com.runtimeoverflow.SchulNetzClient.Data.SubjectGroup;
+import com.runtimeoverflow.SchulNetzClient.Data.User;
 import com.runtimeoverflow.SchulNetzClient.R;
 import com.runtimeoverflow.SchulNetzClient.Variables;
 
@@ -32,6 +33,16 @@ public class GradeGroupsActivity extends AppCompatActivity {
 		
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setTitle(getString(R.string.gradeGroups));
+		
+		Variables.get().currentContext = this;
+		if(Variables.get().user == null){
+			Variables.get().user = User.load();
+			
+			if(Variables.get().user == null){
+				startActivity(new Intent(Variables.get().currentContext, StartActivity.class));
+				return;
+			}
+		}
 		
 		final Context context = this;
 		

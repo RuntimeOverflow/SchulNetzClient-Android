@@ -57,6 +57,9 @@ public class Change<T> {
 				changes.add(new Change<Teacher>(null, currentTeacher, "", ChangeType.ADDED));
 				
 				currentIndex++;
+			} else{
+				previousIndex++;
+				currentIndex++;
 			}
 		}
 		
@@ -90,6 +93,9 @@ public class Change<T> {
 			} else if(currentStudent != null && !previous.students.contains(currentStudent)) {
 				changes.add(new Change<Student>(null, currentStudent, "", ChangeType.ADDED));
 				
+				currentIndex++;
+			} else{
+				previousIndex++;
 				currentIndex++;
 			}
 		}
@@ -131,6 +137,9 @@ public class Change<T> {
 						changes.add(new Change<Grade>(null, currentGrade, "", ChangeType.ADDED));
 						
 						currentSubIndex++;
+					} else{
+						previousSubIndex++;
+						currentSubIndex++;
 					}
 				}
 			} else if(previousSubject != null && !current.subjects.contains(previousSubject)) {
@@ -140,6 +149,9 @@ public class Change<T> {
 			} else if(currentSubject != null && !previous.subjects.contains(currentSubject)) {
 				changes.add(new Change<Subject>(null, currentSubject, "", ChangeType.ADDED));
 				
+				currentIndex++;
+			} else{
+				previousIndex++;
 				currentIndex++;
 			}
 		}
@@ -163,6 +175,9 @@ public class Change<T> {
 			} else if(currentTransaction != null && !previous.transactions.contains(currentTransaction)) {
 				changes.add(new Change<Transaction>(null, currentTransaction, "", ChangeType.ADDED));
 				
+				currentIndex++;
+			} else{
+				previousIndex++;
 				currentIndex++;
 			}
 		}
@@ -189,6 +204,9 @@ public class Change<T> {
 			} else if(currentAbsence != null && !previous.absences.contains(currentAbsence)) {
 				changes.add(new Change<Absence>(null, currentAbsence, "", ChangeType.ADDED));
 				
+				currentIndex++;
+			} else{
+				previousIndex++;
 				currentIndex++;
 			}
 		}
