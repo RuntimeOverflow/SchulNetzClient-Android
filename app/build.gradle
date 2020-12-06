@@ -8,8 +8,8 @@ android {
         applicationId "com.runtimeoverflow.SchulNetzClient"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 35
-        versionName "1.0.15"
+        versionCode 37
+        versionName "1.0.17"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -80,7 +80,7 @@ public class GradesFragment extends Fragment {
 					
 					ArrayList<Subject> previous = Variables.get().user.subjects;
 					
-					Object result = Variables.get().account.loadPage("22326");
+					Object result = Variables.get().account.loadPage("22348");
 					boolean success = false;
 					
 					if(result != null && result.getClass() == Document.class){

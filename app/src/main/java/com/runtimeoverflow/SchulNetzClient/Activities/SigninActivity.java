@@ -176,7 +176,7 @@ public class SigninActivity extends AppCompatActivity {
 												
 												Object doc = account.loadPage("22352");
 												if(doc != null && doc.getClass() == Document.class) Parser.parseTeachers((Document)doc, Variables.get().user);
-												doc = account.loadPage("22326");
+												doc = account.loadPage("22348");
 												if(doc != null && doc.getClass() == Document.class) Parser.parseSubjects((Document)doc, Variables.get().user);
 												if(doc != null && doc.getClass() == Document.class) Parser.parseStudents((Document)doc, Variables.get().user);
 												doc = account.loadPage("21311");

@@ -116,7 +116,7 @@ public class PeopleFragment extends Fragment {
 						Parser.parseTeachers((Document) result, Variables.get().user);
 					}
 					
-					result = Variables.get().account.loadPage("22326");
+					result = Variables.get().account.loadPage("22348");
 					
 					if(result != null && result.getClass() == Document.class){
 						User copy = Variables.get().user.copy();
