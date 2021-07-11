@@ -29,12 +29,12 @@ public class Student {
 		if (o == null || getClass() != o.getClass()) return false;
 		Student student = (Student) o;
 		return Objects.equals(firstName, student.firstName) &&
-				Objects.equals(lastName, student.lastName) &&
-				dateOfBirth.getTimeInMillis() == student.dateOfBirth.getTimeInMillis();
+				Objects.equals(lastName, student.lastName)/* &&
+				dateOfBirth.getTimeInMillis() == student.dateOfBirth.getTimeInMillis()*/;
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(firstName, lastName, dateOfBirth);
+		return Objects.hash(firstName, lastName/*, dateOfBirth*/);
 	}
 }

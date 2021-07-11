@@ -78,10 +78,10 @@ public class Change<T> {
 				if(previousStudent.zipCode != currentStudent.zipCode) changes.add(new Change<Student>(previousStudent, currentStudent, "zipCode", ChangeType.MODIFIED));
 				if(!previousStudent.city.equals(currentStudent.city)) changes.add(new Change<Student>(previousStudent, currentStudent, "city", ChangeType.MODIFIED));
 				if(!previousStudent.phone.equals(currentStudent.phone)) changes.add(new Change<Student>(previousStudent, currentStudent, "phone", ChangeType.MODIFIED));
-				if(previousStudent.dateOfBirth.getTimeInMillis() != currentStudent.dateOfBirth.getTimeInMillis()) changes.add(new Change<Student>(previousStudent, currentStudent, "dateOfBirth", ChangeType.MODIFIED));
+				//if(previousStudent.dateOfBirth.getTimeInMillis() != currentStudent.dateOfBirth.getTimeInMillis()) changes.add(new Change<Student>(previousStudent, currentStudent, "dateOfBirth", ChangeType.MODIFIED));
 				if(!previousStudent.additionalClasses.equals(currentStudent.additionalClasses)) changes.add(new Change<Student>(previousStudent, currentStudent, "additionalClasses", ChangeType.MODIFIED));
 				if(!previousStudent.status.equals(currentStudent.status)) changes.add(new Change<Student>(previousStudent, currentStudent, "status", ChangeType.MODIFIED));
-				if(!previousStudent.placeOfWork.equals(currentStudent.placeOfWork)) changes.add(new Change<Student>(previousStudent, currentStudent, "placeOfWork", ChangeType.MODIFIED));
+				//if(!previousStudent.placeOfWork.equals(currentStudent.placeOfWork)) changes.add(new Change<Student>(previousStudent, currentStudent, "placeOfWork", ChangeType.MODIFIED));
 				if(previousStudent.self != currentStudent.self) changes.add(new Change<Student>(previousStudent, currentStudent, "self", ChangeType.MODIFIED));
 				
 				previousIndex++;

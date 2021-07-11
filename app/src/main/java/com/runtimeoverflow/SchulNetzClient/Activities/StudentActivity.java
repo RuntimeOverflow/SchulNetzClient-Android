@@ -79,7 +79,7 @@ public class StudentActivity extends AppCompatActivity {
 		
 		if(currentStudent.phone.isEmpty()) phoneButton.setTextColor(Color.parseColor("#ff000000"));
 		
-		Calendar birthday = currentStudent.dateOfBirth;
+		/*Calendar birthday = currentStudent.dateOfBirth;
 		SimpleDateFormat sdf = new SimpleDateFormat("d. MMMM yyyy");
 		
 		int age = Calendar.getInstance().get(Calendar.YEAR) - currentStudent.dateOfBirth.get(Calendar.YEAR);
@@ -88,7 +88,7 @@ public class StudentActivity extends AppCompatActivity {
 		c.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
 		age -= c.before(Calendar.getInstance()) ? 0 : 1;
 		
-		birthdayButton.setText(sdf.format(birthday.getTime()) + " (" + age + " " + getString(R.string.age) + ")");
+		birthdayButton.setText(sdf.format(birthday.getTime()) + " (" + age + " " + getString(R.string.age) + ")");*/
 		
 		homeButton.setOnClickListener(new View.OnClickListener() {
 			@Override

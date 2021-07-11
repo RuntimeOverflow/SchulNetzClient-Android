@@ -135,22 +135,16 @@ public class Parser {
 		
 		try{
 			Element table = doc.getElementById("cls-table-Kursliste");
-			if(table == null || table.children().size() < 2) {
+			if(table == null || table.children().size() < 3) {
 				user.students = previous;
 				return false;
 			}
 
-			Elements rows = table.children().get(1).children();
-			if(rows.size() < 2) {
-				user.students = previous;
-				return false;
-			} else if(rows.size() == 2) return true;
-			
-			rows.remove(0);
-			rows.remove(0);
+			Elements rows = table.children().get(2).children();
+			if(rows.size() == 0) return true;
 
 			for(Element row : rows){
-				if(row.children().size() < 15) continue;
+				if(row.children().size() < 13) continue;
 
 				Student s = new Student();
 				s.lastName = row.children().get(1).ownText().trim();
@@ -163,14 +157,14 @@ public class Parser {
 				s.zipCode = row.children().get(8).ownText().trim().length() > 0 ? Integer.parseInt(row.children().get(8).ownText().trim()) : -1;
 				s.city = row.children().get(9).ownText().trim();
 				s.phone = row.children().get(10).ownText().trim();
-				if(row.children().get(11).ownText().trim().length() > 0){
+				/*if(row.children().get(11).ownText().trim().length() > 0){
 					SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 					s.dateOfBirth = Calendar.getInstance();
 					s.dateOfBirth.setTime(sdf.parse(row.children().get(11).ownText().trim()));
-				}
-				s.additionalClasses = row.children().get(12).ownText().trim();
-				s.status = row.children().get(13).ownText().trim();
-				s.placeOfWork = row.children().get(14).ownText().trim();
+				}*/
+				s.additionalClasses = row.children().get(11).ownText().trim();
+				s.status = row.children().get(12).ownText().trim();
+				//s.placeOfWork = row.children().get(14).ownText().trim();
 
 				user.students.add(s);
 			}
@@ -189,19 +183,13 @@ public class Parser {
 		
 		try{
 			Element table = doc.getElementById("cls-table-Lehrerliste");
-			if(table == null || table.children().size() < 2) {
+			if(table == null || table.children().size() < 3) {
 				user.teachers = previous;
 				return false;
 			}
 
-			Elements rows = table.children().get(1).children();
-			if(rows.size() < 2) {
-				user.teachers = previous;
-				return false;
-			} else if(rows.size() == 2) return true;
-			
-			rows.remove(0);
-			rows.remove(0);
+			Elements rows = table.children().get(2).children();
+			if(rows.size() == 0) return true;
 
 			for(Element row : rows){
 				if(row.children().size() < 5) continue;
