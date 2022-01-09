@@ -1,5 +1,5 @@
 # License
-Copyright (C) 2021 RuntimeOverflow
+Copyright (C) 2020-2022 RuntimeOverflow
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; version 2.
 
